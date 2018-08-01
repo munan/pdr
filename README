@@ -1,0 +1,27 @@
+PDR code by Munan Gong. Uses the chemistry network in Gong, Ostriker and
+Wolifre (2017) (http://adsabs.harvard.edu/abs/2017ApJ...843...38G). Requires
+CVODE library.
+
+Steps to run the code:
+1. Install the Sundials CVODE library:
+The CVODE package: https://computation.llnl.gov/projects/sundials/sundials-software
+The default options should be fine.
+
+2. Go to the directory for compiling and running the code.
+$cd run
+There are couple files:
+- run.py: python script to run the code. Edit the “cvode_dir” variable to the install directory of the CVODE package in step 1!
+- examples.in: input file for run.py. Specify the main .cpp file, the executable name, and the output directory. Each line correspond to a different .cpp file/set of PDRs.
+- examples_simple.cpp: a simple example for the main .cpp file that set up the PDR. Run PDR at density n=100 and n=1000 cm-3.
+- examples_large.cpp: same as eample_simple.cpp, except that there is a larger range density from n=10 to n=1000 cm-3, and more density values in between.
+- Makefile.in: input for Makefile, which is made by run.py
+
+3. Run the code.
+$./run.py
+If you want to clean up the executables, you can do 
+$make clean
+
+4. Read the data
+$cd ../python_read_data
+The ipython notebook PDR_example.ipynb shows how to read and plot the data. 
+plot_chem.py and slab.py contains some useful functions.
