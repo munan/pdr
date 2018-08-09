@@ -44,7 +44,7 @@ def fCplus_e(x_e, nH, T, G_PE, G_CI, kcr=2.0e-16, Zd=1., xCstd=1.6e-4):
     return x_Cplus
 
 def fe(nH, T, G_PE, G_CI, kcr=2.0e-16, Zd=1.):
-    """Assuming x_Hplus + x_Cplus = x_e"""
+    """Assuming x_Hplus + x_Cplus = x_e, only works for scalar arguments."""
     def fun(x, nH, T, G_PE, G_CI, kcr, Zd):
         x_Hplus = fHplus_e(x, nH, T, G_PE, kcr=kcr, Zd=Zd)
         x_Cplus = fCplus_e(x, nH, T, G_PE, G_CI, kcr=kcr, Zd=Zd)
@@ -69,4 +69,26 @@ def Cplus_rec_rate(T):
         9.793e-09 * np.exp(-7.38e1/T) + 1.634e-06 * np.exp(-1.523e+04/T) )
     return (alpharr+alphadr)
 
+def fCO(nH, GCO, kcr=2.0e-16, Zd=1., xCstd=1.6e-4):
+    """Use the fitting function in GOW17. Only works for scalar arguments."""
+    kcr16 = kcr/1.0e-16
+    ncrit2 = 2.*( 4.0e3*Zd*kcr16**(-2) )**(GCO**(1./3.)) * (50.*kcr16/Zd**1.4)
+    x_CO = nH/ncrit2;
+    if type(nH) == type(0.) or type(nH) == type(0):
+        if nH >= ncrit2:
+            x_CO = 1.
+    else:
+        indx = (nH >= ncrit2)
+        x_CO[indx] = 1.
+    x_CO *= xCstd*Zd
+    return x_CO
+
+def fCO_exp(nH, GCO, kcr=2.0e-16, Zd=1., xCstd=1.6e-4):
+    """Use the expomential smoothing. For solar neighborhood, the linear
+    smoothing in f_CO seem to work better"""
+    kcr16 = kcr/1.0e-16
+    ncrit = ( 4.0e3*Zd*kcr16**(-2) )**(GCO**(1./3.)) * (50.*kcr16/Zd**1.4)
+    x_CO = 1. - np.exp(-nH/ncrit)
+    x_CO *= xCstd*Zd
+    return x_CO
 
