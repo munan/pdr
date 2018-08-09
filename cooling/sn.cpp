@@ -59,7 +59,7 @@ int main() {
   //output directory. Note this should be the same as that in examples.in
 	const char dir[] 
 	 =
-   "/Users/munangong/chemistry_Athena/PDR_cvode/out_x_e/";
+   "/Users/munangong/chemistry_Athena/PDR_cvode/out_sn/";
 	char fn_nH[100];  
   sprintf(fn_nH, "%snH_arr.dat", dir);
 	char fn_colH[100];  
