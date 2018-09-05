@@ -59,7 +59,7 @@ int main() {
   //output directory. Note this should be the same as that in examples.in
 	const char dir[] 
 	 =
-   "/Users/munangong/chemistry_Athena/PDR_cvode/out_sn/";
+   "/Users/munangong/chemistry_Athena/PDR_cvode/out_CR1e-18/";
 	char fn_nH[100];  
   sprintf(fn_nH, "%snH_arr.dat", dir);
 	char fn_colH[100];  
@@ -109,10 +109,9 @@ int main() {
   //odeNL99.SetbCO(1 * 1e5);
   odeNL99.SetbCOL(true);
   //CR ionisation rate
-  odeNL99.SetIonRate(2e-16);
+  odeNL99.SetIonRate(1e-18);
   //dust and gas metallicity
   odeNL99.SetZg(Zdg);
-  odeNL99.SetZd(Zdg);
 
   //Set grain reaction rates
   odeNL99.SetfH2gr(10./sqrt(temp));

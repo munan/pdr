@@ -38,7 +38,7 @@ int main() {
   //flag for CI self-shielding
 	const bool isfsC = false;
   //dust and gas metallicity
-  const double Zdg = 1.;
+  const double Zdg = 0.1;
   //minimum column of the PDR
 	const double NH_min = 1.0e17/Zdg;
   //maximum column of the PDR
@@ -59,7 +59,7 @@ int main() {
   //output directory. Note this should be the same as that in examples.in
 	const char dir[] 
 	 =
-   "/Users/munangong/chemistry_Athena/PDR_cvode/out_sn/";
+   "/Users/munangong/chemistry_Athena/PDR_cvode/out_Z0p1/";
 	char fn_nH[100];  
   sprintf(fn_nH, "%snH_arr.dat", dir);
 	char fn_colH[100];  

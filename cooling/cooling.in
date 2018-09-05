@@ -1,2 +1,9 @@
 #input cpp file,    output exe,   output dir (same as the last part of dir variable in the input cpp file)
-sn.cpp   sn   out_sn
+#sn.cpp   sn   out_sn
+#G100.cpp   G100   out_G100
+#G100_CR1e-13.cpp   G100_CR1e-13   out_G100_CR1e-13
+#G100_CR1e-14.cpp   G100_CR1e-14   out_G100_CR1e-14
+#G100_CR1e-15.cpp   G100_CR1e-15   out_G100_CR1e-15
+#CR1e-17.cpp   CR1e-17   out_CR1e-17
+#CR1e-18.cpp   CR1e-18   out_CR1e-18
+Z0p1.cpp     Z0p1     out_Z0p1

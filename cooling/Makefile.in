@@ -42,7 +42,7 @@ $(PROJ_slab_grid): $(OBJS_slab_grid)
 clean:
 	$(RM) *.o ../*.o
 	$(RM) .depend
-	$(RM) $(PROJ_slab_grid)
+	$(RM) *.exe
 
 depend: $(SRCS_slab_grid)
 	makedepend $(INCLUDES) $^
