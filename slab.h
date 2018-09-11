@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 class Slab {
+  friend class CoolingFunction;
 	public:
 		Slab(NL99p &ode, CvodeDense &solver,
 				 const long int ngrid, const double NH_total, const double G0,

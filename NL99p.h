@@ -26,6 +26,7 @@
 
 class NL99p : public Ode {
   friend class RadField;
+  friend class CoolingFunction;
   public:
 		/* Map spec_list members to integer index*/
 		typedef std::map<std::string, int> SpecMap;
@@ -91,10 +92,18 @@ class NL99p : public Ode {
 		double GetTime() const;
 		/*return current nH*/
 		double GetnH() const;
+		/*return ionization rate*/
+		double GetIonRate() const;
     /* Calculate internal energy */
     static double GetE(const double T, const double xH2, const double xe);
     /* Return total C abundance*/
     double GetxCtot() const;
+    /* Return total O abundance*/
+    double GetxOtot() const;
+    /* Return total He abundance*/
+    double GetxHetot() const;
+    /* Return dust metallicity*/
+    double GetZd() const;
     /* Set to scale dust rain reaction*/
     void SetfH2gr(double fH2gr);
     void SetfHplusgr(double fHplusgr);

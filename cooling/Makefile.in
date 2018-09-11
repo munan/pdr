@@ -19,7 +19,7 @@ SUNDIAL_FUN = $(sourcedir)sundial.cpp
 SOLVERS = $(sourcedir)cvodeDense.cpp
 ODE_base = $(sourcedir)ode.cpp 
 ODE_NL99p = $(ODE_base) $(sourcedir)NL99p.cpp $(sourcedir)shielding.cpp $(sourcedir)thermo.cpp $(sourcedir)interp.cpp
-SRCS_slab_grid = $(prob) $(ODE_NL99p) $(sourcedir)slab.cpp $(sourcedir)radfield.cpp $(SOLVERS) $(SUNDIAL_FUN)
+SRCS_slab_grid = $(prob) $(ODE_NL99p) $(sourcedir)slab.cpp $(sourcedir)radfield.cpp $(sourcedir)coolingFunction.cpp $(SOLVERS) $(SUNDIAL_FUN)
 
 #object files
 OBJS_slab_grid = $(SRCS_slab_grid:.cpp=.o)

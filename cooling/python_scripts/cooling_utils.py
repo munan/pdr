@@ -75,6 +75,35 @@ def fe(nH, T, G_PE, G_CI, kcr=2.0e-16, Zd=1.):
                      rtol=1e-2, xtol=1e-10)
     return xeq
 
+def fe_iter(nH, T, G_PE, G_CI, kcr=2.0e-16, Zd=1., maxiter=20, x0=0.5):
+    def fun(x, nH, T, G_PE, G_CI, kcr, Zd):
+        x_Hplus = fHplus_e(x, nH, T, G_PE, kcr=kcr, Zd=Zd)
+        x_Cplus = fCplus_e(x, nH, T, G_PE, G_CI, kcr=kcr, Zd=Zd)
+        return x_Hplus + x_Cplus
+    xprev = x0
+    niter = 0
+    rtol = 1e-2
+    small_x = 1e-10
+    small_f = 1e-20
+    fprev = fun(xprev, nH, T, G_PE, G_CI, kcr, Zd) - xprev
+    while True:
+        x = fun(xprev, nH, T, G_PE, G_CI, kcr, Zd)
+        if abs((x-xprev)/(xprev+small_x)) < rtol:
+            break
+        if niter > maxiter:
+            print "fe_iter: WARNING: niter > maxiter."
+            break
+        f = fun(x, nH, T, G_PE, G_CI, kcr, Zd) - x
+        if abs(f - fprev) < small_f:
+            xnew = (x + xprev)/2.
+        else:
+            xnew = x - f * (x-xprev)/(f-fprev)
+        fnew = fun(xnew, nH, T, G_PE, G_CI, kcr, Zd)-xnew
+        xprev = xnew
+        fprev = fnew
+        niter = niter + 1
+    return x, niter
+
 def Cplus_rec_rate(T):
     A = 2.995e-9
     B = 0.7849

@@ -803,6 +803,14 @@ double NL99p::GetnH() const {
 	return nH_;
 }
 
+double NL99p::GetZd() const {
+	return Zd_;
+}
+
+double NL99p::GetIonRate() const {
+	return ion_rate_;
+}
+
 void NL99p::CopyAbd(double *y) const {
 	for (int i=0; i<kDimen; i++) {
 		y[i] = NV_Ith_S(y_, i);
@@ -1022,6 +1030,14 @@ double NL99p::CII_rec_rate_(const double temp) {
 
 double NL99p::GetxCtot() const {
   return xC_;
+}
+
+double NL99p::GetxOtot() const {
+  return xO_;
+}
+
+double NL99p::GetxHetot() const {
+  return xHe_;
 }
 
 void NL99p::SetxCtot(const double xC) {
