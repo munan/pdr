@@ -14,9 +14,12 @@ class CoolingFunction {
     ~CoolingFunction();
     void ComputeAbundances();
 		void WriteAbundances(FILE *pf);
+    void ComputeThermoRates();
+		void WriteThermoRates(FILE *pf);
   private:
     Slab &myslab_;
     //input parameters
+		const int nE_; /*number of heating and cooling processes*/
     double kcr_;
     double nH_;
     double Zd_;
@@ -38,6 +41,7 @@ class CoolingFunction {
     double *fCO_;
     double *fCI_;
     double *fOI_;
+		double **yE_; /*heating and cooling processes*/
 
     //functions to compute abundances
     void get_fH2_();

@@ -56,6 +56,7 @@ for i in xrange(nprob):
     fmake.close()
 
     #(3) call make to compile
+    proc3 = subprocess.Popen("make clean", shell=True).wait()
     proc3 = subprocess.Popen("make", shell=True).wait()
     #pid3, sts3 = os.waitpid(proc3.pid, 0)
 

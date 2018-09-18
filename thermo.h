@@ -12,6 +12,7 @@ class Thermo {
   friend class NL99p;
   friend class NL99o;
   friend class RadField;
+  friend class CoolingFunction;
 	public:
 		Thermo();
 		~Thermo();

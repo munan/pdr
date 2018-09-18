@@ -6,7 +6,6 @@
 #include "NL99p.h"
 #include "cvodeDense.h"
 #include "slab.h"
-#include "coolingFunction.h"
 #include "math.h"
 #include <stdio.h>
 
@@ -39,7 +38,7 @@ int main() {
   //flag for CI self-shielding
 	const bool isfsC = false;
   //dust and gas metallicity
-  const double Zdg = 1.;
+  const double Zdg = 0.5;
   //minimum column of the PDR
 	const double NH_min = 1.0e17/Zdg;
   //maximum column of the PDR
@@ -60,7 +59,7 @@ int main() {
   //output directory. Note this should be the same as that in examples.in
 	const char dir[] 
 	 =
-   "/Users/munangong/chemistry_Athena/PDR_cvode/out_sn_cooling/";
+   "/Users/munangong/chemistry_Athena/PDR_cvode/out_Z0p5/";
 	char fn_nH[100];  
   sprintf(fn_nH, "%snH_arr.dat", dir);
 	char fn_colH[100];  
@@ -106,13 +105,14 @@ int main() {
 	//odeNL99.SetConstTemp(temp); //set temperature to be constant
   //parameters for CO cooling
   odeNL99.SetGradv(3 * 3e-14);
-  odeNL99.SetNCOeffGlobal(false);
+  odeNL99.SetNCOeffGlobal(true);
+  //odeNL99.SetbCO(1 * 1e5);
+  odeNL99.SetbCOL(true);
   //CR ionisation rate
   odeNL99.SetIonRate(2e-16);
   //dust and gas metallicity
   odeNL99.SetZg(Zdg);
   odeNL99.SetZd(Zdg);
-  odeNL99.IsH2rvCooling(false);
 
   //Set grain reaction rates
   odeNL99.SetfH2gr(10./sqrt(temp));
@@ -126,13 +126,10 @@ int main() {
 	for (nH=nH_first; nH<nH_last; nH*=nH_fac) {
 		char *file_slab = new char[100];
 		char *file_rates = new char[100];
-		char *file_cooling = new char[100];
 		sprintf(file_slab, "%sslab%06ld.dat", dir, slab_id);
 		sprintf(file_rates, "%srates%06ld.dat", dir, slab_id);
-		sprintf(file_cooling, "%scooling%06ld.dat", dir, slab_id);
 		FILE *pf = fopen(file_slab, "w+");
 		FILE *pf_rates = fopen(file_rates, "w+");
-		FILE *pf_cooling = fopen(file_cooling, "w+");
 		//G0 = nH / nH2G0;
     //odeNL99.SetIonRate(2e-16 * sqrt(G0));
     G0 = 2.; //incident radiation field strength
@@ -173,23 +170,7 @@ int main() {
       isWriteNH = false;
     }
 
-    //cooling function
-    CoolingFunction *mycooling = new CoolingFunction(*myslab);
-    mycooling->ComputeAbundances();
-    mycooling->WriteAbundances(pf_cooling);
-    mycooling->ComputeThermoRates();
-		char *file_cooling_thermo = new char[100];
-		sprintf(file_cooling_thermo, "%scooling_thermo%06ld.dat", dir, slab_id);
-		FILE *pf_cooling_thermo = fopen(file_cooling_thermo, "w+");
-    mycooling->WriteThermoRates(pf_cooling_thermo);
-
-		fclose(pf_cooling);
-		delete [] file_cooling;
-		fclose(pf_cooling_thermo);
-		delete [] file_cooling_thermo;
-
 		delete myslab;
-		delete mycooling;
 		slab_id++;
 	}
 

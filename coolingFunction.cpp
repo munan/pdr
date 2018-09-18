@@ -7,7 +7,8 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 CoolingFunction::CoolingFunction(Slab &myslab)
-  :myslab_(myslab)
+  :myslab_(myslab),
+	 nE_(myslab.ode_.GetnE())
 {
   //input parameters
   kcr_ = myslab_.ode_.GetIonRate();
@@ -33,13 +34,21 @@ CoolingFunction::CoolingFunction(Slab &myslab)
   fCO_ = new double [ngrid_];
   fCI_ = new double [ngrid_];
   fOI_ = new double [ngrid_];
+	yE_ = new double* [ngrid_];
+	for (int i=0; i<ngrid_; i++) {
+		yE_[i] = new double [nE_];
+	}
   
   //set values for parameters
 	for (int i=0; i<ngrid_; i++) {
     //read temperature
+    double xe_true = myslab_.y_[i][myslab_.ode_.id("H+")]+
+      myslab_.y_[i][myslab_.ode_.id("C+")] + myslab_.y_[i][myslab_.ode_.id("S+")]
+      + myslab_.y_[i][myslab_.ode_.id("Si+")] + myslab_.y_[i][myslab_.ode_.id("HCO+")]
+      + myslab_.y_[i][myslab_.ode_.id("H3+")] + myslab_.y_[i][myslab_.ode_.id("H2+")]
+      + myslab_.y_[i][myslab_.ode_.id("O+")] + myslab_.y_[i][myslab_.ode_.id("He+")];
     T_[i] = myslab_.y_[i][myslab_.ode_.id("E")] / Thermo::CvCold(
-        myslab_.y_[i][myslab_.ode_.id("H2")], xHetot_,
-        myslab_.y_[i][myslab_.ode_.id("*e")]);
+        myslab_.y_[i][myslab_.ode_.id("H2")], xHetot_, xe_true);
     //read radiation fields
     GPE_[i] = myslab_.prad_->GPE[i];
     GCI_[i] = myslab_.prad_->Gph[i][NL99p::iph_C_];
@@ -53,7 +62,11 @@ CoolingFunction::CoolingFunction(Slab &myslab)
     fCO_[i] = 0;
     fCI_[i] = 0;
     fOI_[i] = 0;
-  }
+    /*initialize yE_*/
+    for (int j=0; j<nE_; j++) {
+      yE_[i][j] = 0.;
+    }
+	}
   return;
 }
 
@@ -66,6 +79,10 @@ CoolingFunction::~CoolingFunction(){
   delete [] fCO_;
   delete [] fCI_;
   delete [] fOI_;
+	for (int i=0; i<ngrid_; i++) {
+		delete [] yE_[i];
+	}
+	delete [] yE_;
   return;
 }
 
@@ -255,5 +272,73 @@ void CoolingFunction::get_fCplus_() {
 	for (int i=0; i<ngrid_; i++) {
     fCplus_[i] = fCplus_e_(fe_[i], fH2_[i], T_[i], GPE_[i], GCI_[i]);
   }
+  return;
+}
+
+void CoolingFunction::ComputeThermoRates() {
+  const double mCO = 4.68e-23;
+  double vth, nCO, NCOeff, Leff_n, Leff_v, Leff, kcr_H_fac;
+  double GLya, GCII, GCI, GOI, GCOR, GRec;
+  double LCR, LPE;
+	for (int i=0; i<ngrid_; i++) {
+    //cooling
+    GLya = Thermo::CoolingLya(fHI_[i], nH_*fe_[i],  T_[i]);
+    if (nH_ < 0.2 && i == 0) {
+      printf("nH=%.2e, T=%.2e, fHI=%.2e, fe=%.2e, GLya=%.2e\n",
+             nH_, T_[i], fHI_[i], fe_[i], GLya);
+    }
+
+    GCII = Thermo::CoolingCII(fCplus_[i],  nH_*fHI_[i],  nH_*fH2_[i], 
+                              nH_*fe_[i],  T_[i]);
+    GCI = Thermo:: CoolingCI(fCI_[i],  nH_*fHI_[i],  nH_*fH2_[i],
+                             nH_*fe_[i],  T_[i]);
+    GOI = Thermo:: CoolingOI(fOI_[i],  nH_*fHI_[i],  nH_*fH2_[i],
+                             nH_*fe_[i],  T_[i]);
+    //calculate effective column for CO
+    vth = sqrt(2. * Thermo::kb_ * T_[i] / mCO);
+    nCO = nH_ * fCO_[i];
+    if (myslab_.ode_.gradv_ > vth / myslab_.ode_.dx_cell_) {
+      NCOeff = nCO / myslab_.ode_.gradv_;
+    } else {
+      Leff_n = nH_ / myslab_.ode_.gradnH_;
+      Leff_v = vth / myslab_.ode_.gradv_;
+      Leff = std::min(Leff_n, Leff_v);
+      NCOeff = nCO * Leff / vth;
+    }
+    GCOR = Thermo::CoolingCOR(fCO_[i], nH_*fHI_[i],  nH_*fH2_[i],
+                              nH_*fe_[i],  T_[i],  NCOeff);
+    GRec = Thermo::CoolingRec(Zd_,  T_[i],  nH_*fe_[i], GPE_[i]);
+    //heating
+    kcr_H_fac = 1.15 * 2*fH2_[i] + 1.5 * fHI_[i];
+    LCR = Thermo::HeatingCr(fe_[i],  nH_,
+										        fHI_[i],  xHetot_,  fH2_[i],
+		   							        kcr_*kcr_H_fac,  kcr_*1.1, kcr_*2.0*kcr_H_fac);
+    LPE = Thermo::HeatingPE(GPE_[i], Zd_, T_[i], nH_*fe_[i]);
+    yE_[i][0] =  LCR;
+    yE_[i][1] =  LPE;
+    yE_[i][2] =  0.;
+    yE_[i][3] = 0.;
+    yE_[i][4] = 0.;
+    yE_[i][5] = GCII;
+    yE_[i][6] = GCI;
+    yE_[i][7] = GOI;
+    yE_[i][8] = GLya;
+    yE_[i][9] = GCOR;
+    yE_[i][10] = 0.;
+    yE_[i][11] = 0.;
+    yE_[i][12] = GRec;
+    yE_[i][13] = 0.;
+    yE_[i][14] = 0.;
+  }
+  return;
+}
+
+void CoolingFunction::WriteThermoRates(FILE *pf) {
+	for (int i=0; i<ngrid_; i++) {
+		for (int j=0; j<nE_; j++) {
+			fprintf(pf, "%12.4e  ", yE_[i][j]);
+		}
+		fprintf(pf, "\n");
+	}
   return;
 }
