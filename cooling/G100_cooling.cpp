@@ -60,7 +60,7 @@ int main() {
   //output directory. Note this should be the same as that in examples.in
 	const char dir[] 
 	 =
-   "/Users/munangong/chemistry_Athena/PDR_cvode/out_sn_cooling/";
+   "/Users/munangong/chemistry_Athena/PDR_cvode/out_G100_cooling/";
 	char fn_nH[100];  
   sprintf(fn_nH, "%snH_arr.dat", dir);
 	char fn_colH[100];  
@@ -135,7 +135,7 @@ int main() {
 		FILE *pf_cooling = fopen(file_cooling, "w+");
 		//G0 = nH / nH2G0;
     //odeNL99.SetIonRate(2e-16 * sqrt(G0));
-    G0 = 2.; //incident radiation field strength
+    G0 = 200.; //incident radiation field strength
 		odeNL99.SetInit(t0, y0);
 		odeNL99.SetnH(nH);
 		Slab *myslab = new Slab(odeNL99, cvodeDense, ngrid, NH_total, G0, Zdg,

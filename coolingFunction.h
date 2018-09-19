@@ -31,6 +31,7 @@ class CoolingFunction {
     double *GPE_;
     double *GCI_;
     double *GCO_;
+    double *GH2_;
 
     //output paramters
     double *fe_;
@@ -44,14 +45,16 @@ class CoolingFunction {
 		double **yE_; /*heating and cooling processes*/
 
     //functions to compute abundances
-    void get_fH2_();
+    void get_fH2_CR_();//only account for CR destruction
+    void get_fH2_();//CR + FUV destruction. Need GH2_
     void get_fCO_(); //Its necessary to calculate fCplus_ and fH2_ first
-    double fHplus_e_(double x_e, double x_H2, double temp, double G_PE);
+    double fHplus_e_(double x_e, double x_Cplus, double x_H2,
+                     double temp, double G_PE);
     double CII_rec_rate_(const double temp);
     double fCplus_e_(double x_e, double x_H2, double temp, double G_PE, double G_CI);
     double fe_e_(double x_e, double x_H2, double temp, double G_PE, double G_CI);
     void get_fe_(); //need fH2_ first, solve the electron abundance with iteration
-    void get_fHplus_();//need to calculate fe_ and fH2_ first
+    void get_fHplus_();//need to calculate fe_, fCplus,  and fH2_ first
     void get_fCplus_();//need to calculate fe_ and fH2_ first
 };
 

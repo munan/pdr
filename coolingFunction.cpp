@@ -24,6 +24,7 @@ CoolingFunction::CoolingFunction(Slab &myslab)
 	GPE_ = new double [ngrid_];
 	GCI_ = new double [ngrid_];
 	GCO_ = new double [ngrid_];
+	GH2_ = new double [ngrid_];
 
   //output paramters
 	fe_ = new double [ngrid_];
@@ -53,6 +54,7 @@ CoolingFunction::CoolingFunction(Slab &myslab)
     GPE_[i] = myslab_.prad_->GPE[i];
     GCI_[i] = myslab_.prad_->Gph[i][NL99p::iph_C_];
     GCO_[i] = myslab_.prad_->Gph[i][NL99p::iph_CO_];
+    GH2_[i] = myslab_.prad_->Gph[i][NL99p::iph_H2_];
     //initial value for output parameters are zero.
     fe_[i] = 0;
     fHplus_[i] = 0;
@@ -89,8 +91,8 @@ CoolingFunction::~CoolingFunction(){
 void CoolingFunction::ComputeAbundances() {
   get_fH2_();
   get_fe_();
-  get_fHplus_();
   get_fCplus_();
+  get_fHplus_();
   get_fCO_();
 	for (int i=0; i<ngrid_; i++) {
     fHI_[i] = MAX(1. - 2.0*fH2_[i] - fHplus_[i], 0.);
@@ -115,7 +117,7 @@ void CoolingFunction::WriteAbundances(FILE *pf) {
   return;
 }
 
-void CoolingFunction::get_fH2_() {
+void CoolingFunction::get_fH2_CR_() {
   double kgr = 3.0e-17*Zd_;
   double R = kgr * nH_ / (2. * kcr_);
   double b = - (1.65*1.5 + 2.*R);
@@ -124,6 +126,20 @@ void CoolingFunction::get_fH2_() {
   double x_H2 = (-b - sqrt(b*b - 4*a*c) )/(2.*a);
 	for (int i=0; i<ngrid_; i++) {
     fH2_[i] = x_H2;
+  }
+  return;
+}
+
+void CoolingFunction::get_fH2_() {
+  double kgr = 3.0e-17*Zd_;
+  double R = kgr * nH_ / (2. * kcr_);
+  double a = 1.65*0.7;
+  double c = R;
+  double k_FUV, b;
+	for (int i=0; i<ngrid_; i++) {
+    k_FUV = 5.7e-11 * GH2_[i];
+    b = - (1.65*1.5 + 2.*R + k_FUV/(2.*kcr_));
+    fH2_[i] = (-b - sqrt(b*b - 4*a*c) )/(2.*a);
   }
   return;
 }
@@ -143,9 +159,9 @@ void CoolingFunction::get_fCO_() {
     } else {
       x_CO = nH_/ncrit2;
     }
-    x_CO *= xCtot_*Zd_;
-    x_CO_max1 = xCtot_*Zd_ - fCplus_[i];
-    x_CO_max2 = xCtot_*Zd_*fH2_[i]*2.;
+    x_CO *= xCtot_;
+    x_CO_max1 = xCtot_ - fCplus_[i];
+    x_CO_max2 = xCtot_*fH2_[i]*2.;
     x_CO = MIN(x_CO, x_CO_max1);
     x_CO = MIN(x_CO, x_CO_max2);
     fCO_[i] = x_CO;
@@ -153,23 +169,27 @@ void CoolingFunction::get_fCO_() {
   return;
 }
 
-double CoolingFunction::fHplus_e_(double x_e, double x_H2, double temp, double G_PE) {
-    double x_H = 1. - 2. * x_H2;
-    double k_Hplus_e = 2.753e-14 * pow( 315614.0 / temp, 1.5) * pow( 
-                 1.0 + pow( 115188.0 / temp, 0.407) , -2.242 );
-    const double cHp_[7] = {12.25, 8.074e-6, 1.378, 5.087e2,
-                                 1.586e-2, 0.4723, 1.102e-5};
-    double psi_gr = 1.7 * G_PE * sqrt(temp)/(nH_ * x_e);
-    double k_Hplus_gr = 1.0e-14 * cHp_[0] / 
-		           (
-			           1.0 + cHp_[1]*pow(psi_gr, cHp_[2]) * 
-								   (1.0 + cHp_[3] * pow(temp, cHp_[4])
-										             *pow( psi_gr, -cHp_[5]-cHp_[6]*log(temp) ) 
-									 ) 
-								) * Zd_;
-    double k_cr_H = kcr_ * (2.3*x_H2 + 1.5*x_H);
-    double c = k_cr_H * x_H / nH_;
-    double x_Hplus = c/(k_Hplus_e *  x_e + k_Hplus_gr);
+double CoolingFunction::fHplus_e_(double x_e, double x_Cplus, double x_H2,
+                                  double temp, double G_PE) {
+  const double small_ = 1e-50;
+  double x_H = 1. - 2. * x_H2 - (x_e - x_Cplus);
+  x_H = MAX(x_H, 0.0);
+  double k_Hplus_e = 2.753e-14 * pow( 315614.0 / temp, 1.5) * pow( 
+               1.0 + pow( 115188.0 / temp, 0.407) , -2.242 );
+  const double cHp_[7] = {12.25, 8.074e-6, 1.378, 5.087e2,
+                               1.586e-2, 0.4723, 1.102e-5};
+  double psi_gr = 1.7 * G_PE * sqrt(temp)/(nH_ * x_e + small_);
+  double k_Hplus_gr = 1.0e-14 * cHp_[0] / 
+             (
+               1.0 + cHp_[1]*pow(psi_gr, cHp_[2]) * 
+                 (1.0 + cHp_[3] * pow(temp, cHp_[4])
+                               *pow( psi_gr, -cHp_[5]-cHp_[6]*log(temp) ) 
+                 ) 
+              ) * Zd_;
+  double k_cr_H = kcr_ * (2.3*x_H2 + 1.5*x_H);
+  double c = k_cr_H * x_H / nH_;
+  double x_Hplus = c/(k_Hplus_e *  x_e + k_Hplus_gr);
+  x_Hplus = MIN(x_Hplus, 1.0);
   return x_Hplus;
 }
 
@@ -192,10 +212,11 @@ double CoolingFunction::CII_rec_rate_(const double temp) {
 
 double CoolingFunction::fCplus_e_(double x_e, double x_H2, 
                                   double temp, double G_PE, double G_CI) {
+  const double small_ = 1e-50;
   double k_C_cr = 3.85 * kcr_;
   double k_C_photo = 3.5e-10*G_CI;
   double k_Cplus_e = CII_rec_rate_(temp);
-  double psi_gr = 1.7 * G_PE * sqrt(temp)/(nH_ * x_e);
+  double psi_gr = 1.7 * G_PE * sqrt(temp)/(nH_ * x_e + small_);
   const double cCp_[7] = {45.58, 6.089e-3, 1.128, 4.331e2, 4.845e-2,
                           0.8120, 1.333e-4};
   double k_Cplus_gr = 1.0e-14 * cCp_[0] / 
@@ -208,20 +229,21 @@ double CoolingFunction::fCplus_e_(double x_e, double x_H2,
   double k_Cplus_H2 = 3.3e-13 * pow(temp, -1.3) * exp(-23./temp);
   double c = (k_C_cr + k_C_photo) / nH_;
   double al = k_Cplus_e*x_e + k_Cplus_gr + k_Cplus_H2*x_H2 + c;
-  double ar = xCtot_ * Zd_ * c;
+  double ar = xCtot_ * c;
   double x_Cplus = ar / al;
   return x_Cplus;
 }
 
 double CoolingFunction::fe_e_(double x_e, double x_H2, double temp,
                               double G_PE, double G_CI) {
-  return ( fHplus_e_(x_e, x_H2, temp, G_PE) 
-           + fCplus_e_(x_e, x_H2, temp, G_PE, G_CI) );
+  double xCplus = fCplus_e_(x_e, x_H2, temp, G_PE, G_CI);
+  double xHplus = fHplus_e_(x_e, xCplus, x_H2, temp, G_PE);
+  return (xCplus + xHplus);
 }
 
 void CoolingFunction::get_fe_() {
   const double rtol = 1e-2;
-  const double small_x = 1e-10;
+  const double small_x = 1e-6;
   const double small_f = 1e-20;
   const int maxiter = 20;
   double x = 0;
@@ -231,17 +253,23 @@ void CoolingFunction::get_fe_() {
   int niter = 0;
   double xprev = 0.5;
   double fprev = 0;
+  double a = 0.0;
+  double fa = 0.0;
+  double b = 1.0;
+  bool flag = true;
 	for (int i=0; i<ngrid_; i++) {
     niter = 0;
     fprev = fe_e_(xprev, fH2_[i], T_[i], GPE_[i], GCI_[i]) - xprev;
     while (1) {
       x = fe_e_(xprev, fH2_[i], T_[i], GPE_[i], GCI_[i]);
-      if ( abs((x-xprev)/(xprev+small_x)) < rtol ) {
+      if ( abs((x-xprev)/(xprev+small_x)) < rtol || abs(fprev) < small_x || 
+           abs((a-b)/(b+small_x)) < rtol) {
         break;
       }
       if (niter > maxiter) {
         printf("get_fe_: WARNING: niter>maxiter(=%d), x=%.2e, xprev=%.2e\n", 
                maxiter, x, xprev);
+        printf("a=%.2e, b=%.2e\n", a, b);
         //TODO: throw run time error?
         break;
       }
@@ -251,19 +279,32 @@ void CoolingFunction::get_fe_() {
       } else {
         xnew = x - f * (x-xprev)/(f-fprev);
       }
+      if (xnew < a || xnew > b) {
+        xnew = (a + b)/2.;
+      }
+      if (flag) {
+        fa = fe_e_(a, fH2_[i], T_[i], GPE_[i], GCI_[i])-a;
+      }
       fnew = fe_e_(xnew, fH2_[i], T_[i], GPE_[i], GCI_[i])-xnew;
+      if (fa * fnew < 0.0) {
+        b = xnew;
+        flag = false;
+      } else {
+        a = xnew;
+        flag = true;
+      }
       xprev = xnew;
       fprev = fnew;
       niter = niter + 1;
     }
-    fe_[i] = x;
+    fe_[i] = xprev;
   }
   return;
 }
 
 void CoolingFunction::get_fHplus_() {
 	for (int i=0; i<ngrid_; i++) {
-    fHplus_[i] = fHplus_e_(fe_[i], fH2_[i], T_[i], GPE_[i]);
+    fHplus_[i] = fHplus_e_(fe_[i], fCplus_[i], fH2_[i], T_[i], GPE_[i]);
   }
   return;
 }
@@ -283,11 +324,6 @@ void CoolingFunction::ComputeThermoRates() {
 	for (int i=0; i<ngrid_; i++) {
     //cooling
     GLya = Thermo::CoolingLya(fHI_[i], nH_*fe_[i],  T_[i]);
-    if (nH_ < 0.2 && i == 0) {
-      printf("nH=%.2e, T=%.2e, fHI=%.2e, fe=%.2e, GLya=%.2e\n",
-             nH_, T_[i], fHI_[i], fe_[i], GLya);
-    }
-
     GCII = Thermo::CoolingCII(fCplus_[i],  nH_*fHI_[i],  nH_*fH2_[i], 
                               nH_*fe_[i],  T_[i]);
     GCI = Thermo:: CoolingCI(fCI_[i],  nH_*fHI_[i],  nH_*fH2_[i],

@@ -52,7 +52,7 @@ int main() {
   const int field_geo = 0; 
 
   //set up densities of a series of PDR
-	const double nH_first = 0.01;
+	const double nH_first = 0.1;
 	const double nH_last = 1.0e3;
 	const double nH_fac = 1.5;
 	//const double nH2G0 = 94. / ( 1. + 3.1*pow(Zdg, 0.365) ); /*nH/G0 constant in CNM*/
@@ -60,7 +60,7 @@ int main() {
   //output directory. Note this should be the same as that in examples.in
 	const char dir[] 
 	 =
-   "/Users/munangong/chemistry_Athena/PDR_cvode/out_sn_cooling/";
+   "/Users/munangong/chemistry_Athena/PDR_cvode/out_CR1e-13_cooling/";
 	char fn_nH[100];  
   sprintf(fn_nH, "%snH_arr.dat", dir);
 	char fn_colH[100];  
@@ -108,7 +108,7 @@ int main() {
   odeNL99.SetGradv(3 * 3e-14);
   odeNL99.SetNCOeffGlobal(false);
   //CR ionisation rate
-  odeNL99.SetIonRate(2e-16);
+  odeNL99.SetIonRate(1e-13);
   //dust and gas metallicity
   odeNL99.SetZg(Zdg);
   odeNL99.SetZd(Zdg);
