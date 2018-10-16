@@ -56,3 +56,23 @@
 
 
 #include <math.h>
+
+static const Real xCstd=1.6e-4, xOstd=3.2e-4, xHetot=0.1;
+
+/*----------------------------------------------------------------------------*/
+/* PRIVATE FUCNTIONS                                                          */
+/*----------------------------------------------------------------------------*/
+//H2 abundance consider only CR destruction (no FUV)
+static Real fH2_CR(const Real nH, const Real T, const Real Z_d,
+                   const Real xi_CR);
+
+/*----------------------------------------------------------------------------*/
+/* PUBLIC FUCNTIONS                                                           */
+/*----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------*/
+/* IMPLEMENTATION of FUCNTIONS                                                */
+/*----------------------------------------------------------------------------*/
+
+static Real fH2_CR(const Real nH, const Real T, const Real Z_d,
+                   const Real xi_CR);
