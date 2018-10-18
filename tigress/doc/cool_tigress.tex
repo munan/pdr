@@ -10,22 +10,229 @@
 \interfootnotelinepenalty=10000
 \newcommand{\Munan}[1]{{\color{red}#1}}
 \newcommand{\di}{\mathrm{d}} 
+\newcommand{\e}{\mathrm{e}} 
 \newcommand{\mr}{\mathrm} 
+\newcommand{\Ht}{\mathrm{H_2}} 
+\newcommand{\Ho}{\mathrm{H}} 
+\newcommand{\HI}{\mathrm{HI}} 
+\newcommand{\Hplus}{\mathrm{H^+}}
+\newcommand{\He}{\mathrm{He}} 
+\newcommand{\Heplus}{\mathrm{He^+}}
+\newcommand{\HCOplus}{\mathrm{HCO^+}}
+\newcommand{\CO}{\mathrm{CO}} 
+\newcommand{\CI}{\mathrm{CI}}
+\newcommand{\OI}{\mathrm{OI}}
+\newcommand{\Cplus}{\mathrm{C^+}} 
+\newcommand{\CHx}{\mathrm{CH_x}} 
+\newcommand{\CH}{\mathrm{CH}} 
+\newcommand{\OHx}{\mathrm{OH_x}} 
+\newcommand{\Oplus}{\mathrm{O^+}} 
+\newcommand{\Si}{\mathrm{Si}} 
+\newcommand{\Siplus}{\mathrm{Si^+}} 
+
 
 \defcitealias{GO2015}{GO15}
 
 \begin{document}
-\title{Chondrule Formation by the Jovian Sweeping Secular Resonance}
+\title{Heating and cooling in TIGRESS simulations}
 \author{Munan Gong (\begin{CJK*}{UTF8}{gbsn}龚慕南\end{CJK*})\altaffilmark{1}}
 \altaffiltext{1}{Max-Planck Institute for Extraterrestrial Physics,
 Garching by Munich, 85748, Germany; 
 munan@mpe.mpg.de}
 
 \begin{abstract}
-    abstract
+    Heating and cooling routine for TIGRESS simulations \citep{KO2017}
+    based on equilibrium chemistry in \citep{GOW2016}.
 \end{abstract}
 
 \section{Introduction}
+The aim here is to develop a physically motivated accurate 
+heating and cooling function
+that takes the hydro and radiation variables in the TIGRESS simulation and
+gives a heating and cooling rate. The heating and cooling rates given here 
+are very similar to the results from equilibrium chemistry, but are
+obtained without the need to solve the full chemistry ODEs. The abundances of
+different species are calculated (semi-)analytically from equilibrium conditions.
+The heating and cooling rates then can be calculated from analytic expressions
+or interpolation tables (in the case of $\CO$ rotational lines).
+
+Section \ref{section:para} gives a summary of the input and output parameters.
+Section \ref{section:chem} explains the calculation of the
+abundances of chemical species. Sections \ref{section:heating} and
+\ref{section:cooling} describes the heating and cooling processes included.
+
+\section{Input and output parameters}\label{section:para}
+Table \ref{table:input} list all the input parameters. The outputs are the
+heating rate $\Gamma$ and cooling rate $\Lambda$:
+\begin{equation}\label{eq:heating}
+    \Gamma(n_\Ho, T, Z, G_\mr{PE}) = \Gamma_\mr{PE} + \Gamma_\mr{CR} +
+    \Gamma_\mr{H_2 pump},
+\end{equation}
+and
+\begin{align}\label{eq:cooling}
+    \begin{split}
+    &\Lambda(n_\Ho, T, \langle |\di v/\di r| \rangle, Z, G_\mr{PE},  G_\CI,
+    G_\CO(,G_\Ht)) \\
+    &= \Lambda_\mr{Ly\alpha}+\Lambda_\OI + \Lambda_\Cplus +
+    \Lambda_\CI + \Lambda_\CO + \Lambda_\mr{rec}.
+    \end{split}
+\end{align}
+
+The details about these heating and cooling processes are explained in the
+following sections.
+
+\begin{table*}[htbp]
+    \centering
+    \caption{Input parameters}
+    \label{table:input}
+    \begin{tabular}{l l l}
+        \tableline
+        \tableline
+        Symbol & Meaning & Note\\ 
+        \tableline
+        \multicolumn{3}{l}{Hydro parameters:}\\
+        $n_\Ho$ & number density of hydrogen atoms & $\rho=1.4271 n_\Ho m_\Ho$
+        \\
+        $T$ & temperature & $T=\mu m_\Ho P/ (\rho k_b)$, $\mu$ is the molecular
+        weight\tablenotemark{a} 
+        \\
+        $\langle |\di v/\di r| \rangle$ 
+        & the mean (absolute) velocity gradient\tablenotemark{b}
+        & for LVG approximation in $\CO$ cooling 
+        \\
+        \multicolumn{3}{l}{Radiation field strengths\tablenotemark{c}:}\\
+        $G_\mr{PE}$ &photo-electric heating &
+        $\gamma_\mr{PE} = 1.87$
+        \\
+        $G_\CI$ &radiation field for $\CI$ to $\Cplus$ photo-ionization &
+        $\gamma_\CI = 3.76$
+        \\
+        $G_\CO$ &$\CO$ photo-dissociation (only dust
+        shielding) & $\gamma_\CO = 3.88$. \Munan{Use the same $\gamma$
+        for $\CI$ and $\CO$?}
+        \\
+        $G_\Ht$\tablenotemark{d} 
+        &$\Ht$ photo-dissociation (dust- and self-
+        shielding) &dust shielding: $\gamma_\Ht=4.18$,
+        self-shielding from \citet{DB1996}.
+        \\
+        \multicolumn{3}{l}{Other parameters:}\\
+        $Z$ & metallicity & Assuming the same metallicity for gas and dust
+        $Z=Z_d=Z_g$
+        \\
+        $\xi_\Ho$ & primary cosmic-ray ionization rate per $\Ho$ atom
+        & scales with star formation rate and surface density\tablenotemark{e}
+        \\
+
+        \tableline
+    \end{tabular}
+    \tablenotetext{1}{$\mu = [m_\mathrm{He, tot} x_\mathrm{He, tot} +
+    m_\Ht x_\Ht + m_\Ho (1-x_\Ht) ]/ [m_\Ho (x_\mathrm{He,tot} + x_\Ht +
+    (1-2x_\Ht) + x_\e)] = (m_\mathrm{He, tot} x_\mathrm{He, tot} + m_\Ho) /
+    [m_\Ho (x_\mathrm{He,tot} + 1 - x_\Ht + x_\e)] = 
+    1.4271 / (x_\mathrm{He,tot} + 1 - x_\Ht + x_\e)$. $T=P/[n_\Ho k_b
+    (x_\mathrm{He,tot} + 1 - x_\Ht + x_\e)]$.}
+    \tablenotetext{2}{Averaged across the six faces of each grid cell in the
+    simulation.}
+    \tablenotetext{3}{For one-sided slab and only consider dust shielding,
+    $G_i = G_0 \exp(-\gamma_i A_V) = G_0 \exp(-\sigma_i N_\Ho)$,
+    where $G_0$ is the interstellar radiation field (\Munan{The spectrum from
+    star clusters might be different?}), $A_V=N_\Ho/1.87\times
+    10^{-21}\mr{cm^{-2}}$, and the cross-section $\sigma_i = (\gamma_i/1.87) \times
+    10^{21}~\mr{cm^{-2}}$. }
+    \tablenotetext{3}{We only need to calculate $G_\Ht$ if we want to include
+    heating by UV-pumping of $\Ht$ (in high radiation field and low metallcitiy
+    gas) or we want to calculate $\Ht$ abundances in cloud edges including FUV
+    photo dissociation (not necessary in most cases, since $\Ht$ is considered
+    to be affected by non-equilibrium chemistry).}
+    \tablenotetext{5}{For the solar neighborhood,
+    $\xi_\Ho \approx 2\times 10^{-16}~\mr{s^{-1} H^{-1}}$. 
+    $\xi_{-16} = 0.472
+    \frac{\Sigma_\mathrm{SFR,-3}}{\Sigma_\mathrm{gas}/50M_\odot\mathrm{pc^{-2}}
+    + 1}$, $\xi_{-16} = \xi_\Ho / 10^{-16}\mr{s^{-1} H^{-1}}$, 
+    $\Sigma_\mathrm{SFR,-3} =
+    \Sigma_\mathrm{SFR}/10^{-3}M_\odot\mathrm{kpc^{-2}Myr^{-1}}$.}
+\end{table*}
+
+\section{Chemical Abundances}\label{section:chem}
+In order to calculate the heating and cooling rates in Equations
+(\ref{eq:heating}) and (\ref{eq:cooling}), we need to know the chemical
+abundances of the species listed in Table \ref{table:chem}. We explain the
+calculation of the abundances of these species below. 
+\begin{table*}[htbp]
+    \centering
+    \caption{Chemical species}
+    \label{table:chem}
+    \begin{tabular}{l l l}
+        \tableline
+        \tableline
+        Species & Abundance calculation & Dependence\\ 
+        \tableline
+        $\Ht$ & analytic, see Section \ref{section:H2}
+        & $n_\Ho$, $T$, $Z_d$, $\xi_\Ho$ (and $G_\Ht$)
+        \\
+        $\mr{e^-}$ & iterative, assumes $x_\e=x_\Hplus + x_\Cplus$, 
+        see Section \ref{section:e} 
+        & $x_\Ht$, $n_\Ho$, $T$, $Z_d$, $Z_g$, $\xi_\Ho$, $G_\mr{PE}$, $G_\CI$
+        \\
+        $\Cplus$ &analytic, see Section \ref{section:e} 
+        & $x_\e$, $x_\Ht$, $n_\Ho$, $T$, $Z_d$, $Z_g$, 
+        $\xi_\Ho$, $G_\mr{PE}$, $G_\CI$
+        \\
+        $\Hplus$ & analytic, see Section \ref{section:e} 
+        & $x_\e$, $x_\Ht$, $x_\Cplus$, $n_\Ho$, $T$, $Z_d$,
+        $\xi_\Ho$, $G_\mr{PE}$
+        \\
+        $\CO$ &analytic, see Section \ref{section:CO} 
+        & $x_\Ht$, $x_\Cplus$, $n_\Ho$, $Z_d$, $Z_g$, 
+        $\xi_\Ho$, $G_\CO$
+        \\
+        $\HI$ &elemental conservation & $x_\HI = 1 - 2x_\Ht - x_\Hplus$ 
+        \\
+        $\CI$ &elemental conservation & $x_\CI = x_\mr{C,tot} - x_\Cplus -
+        x_\CO$ 
+        \\
+        $\OI$ &elemental conservation & $x_\OI = x_\mr{O,tot} - x_\CO$ 
+        \\
+        \tableline
+    \end{tabular}
+\end{table*}
+
+\subsection{$\Ht$ Abundance\label{section:H2}}
+The $\Ht$ abundance can be obtained from Equation (18) in \citet{GOK2018}:
+\begin{equation}\label{eq:GOK2018_eq18}
+    f_\Ht n_\Ho k_\mr{gr} = 1.65 f_\Ht k_\mr{CR}.
+\end{equation}
+The left hand side is the rate of $\Ht$ formation on dust grains. On the right
+hand side, $f_\Ht k_\mr{CR}$ is the destruction of $\Ht$ by cosmic rays, and
+the $1.65$ factor comes from additional channels of $\Ht$ destruction by
+$\mr{H_2^+}$ and $\Ht$ formation by $\mr{H_3^+}$. If we take the
+photo-dissociation of $\Ht$ by FUV radiation into account, which can be
+important at the edge of the cloud especially when the cosmic ray ionization
+rate is low, then Equation (\ref{eq:GOK2018_eq18}) becomes:
+\begin{equation}\label{eq:H2}
+    f_\Ht n_\Ho k_\mr{gr} = 1.65 f_\Ht k_\mr{CR} + f_\Ht k_\gamma,
+\end{equation}
+where $k_\gamma=5.7\times 10^{-11}G_\Ht~\mr{s^{-1}}$ is the photo-dissociation
+rate of $\Ht$. Using $x_\Ho = 1-2x_\Ht$ and
+$k_\mr{CR}=2\xi_\Ho(2.3x_\Ht+1.5x_\Ho)$, Equation (\ref{eq:H2}) can be written
+as a quadratic equation for $x_\Ht$:
+\begin{align}
+    &a x_\Ht^2 + bx_\Ht + c = 0\\
+    &a = 1.155\\
+    &b=- (2.475 + 2R + \frac{k_\gamma}{2\xi_\Ho}),
+    ~R=\frac{k_\mr{gr}n_\Ho}{2\xi_\Ho}\\
+    &c=R,
+\end{align}
+and the $\Ht$ abundance $x_\Ht=(-b - \sqrt{b^2 - 4ac} )/(2a)$. If $k_\gamma=0$,
+this recovers the result in \citet{GOK2018} without photo-dissociation.
+
+\subsection{$\mr{e^{-}}$, $\Cplus$ and $\Hplus$ Abundances\label{section:e}}
+\subsection{$\CO$ Abundance\label{section:CO}}
+
+\section{Heating}\label{section:heating}
+
+\section{Cooling}\label{section:cooling}
 
 \bibliographystyle{apj}
 \bibliography{apj-jour,thesis}
@@ -39,3 +246,21 @@ munan@mpe.mpg.de}
 \caption{caption}
 \label{fig:somefig}
 \end{figure}
+
+\begin{table*}[htbp]
+    \caption{caption}
+    \label{table:some table}
+    \begin{tabular}{l l l l l}
+        \tableline
+        \tableline
+        No. &Reaction &Rate coefficient\tablenotemark{a} &Notes
+        &Reference\\ 
+        \tableline
+        \multicolumn{5}{l}{Grain-assisted reactions:}\\
+        1 &$\mathrm{H + H + gr \rightarrow H_2 + gr}$ 
+        &$3.0\times 10^{-17}$ & &1, 2\\
+        
+        \tableline
+    \end{tabular}
+    \tablenotetext{1}{}
+\end{table*}

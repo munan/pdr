@@ -54,8 +54,8 @@
  *
  *============================================================================*/
 
-
 #include <math.h>
+#define Real double //TODO:replace this by include def.in file in athena
 
 static const Real xCstd=1.6e-4, xOstd=3.2e-4, xHetot=0.1;
 
@@ -65,6 +65,8 @@ static const Real xCstd=1.6e-4, xOstd=3.2e-4, xHetot=0.1;
 //H2 abundance consider only CR destruction (no FUV)
 static Real fH2_CR(const Real nH, const Real T, const Real Z_d,
                    const Real xi_CR);
+static Real fH2_CR_FUV(const Real nH, const Real T, const Real Z_d,
+                       const Real xi_CR, const Real G_H2);
 
 /*----------------------------------------------------------------------------*/
 /* PUBLIC FUCNTIONS                                                           */
@@ -74,5 +76,24 @@ static Real fH2_CR(const Real nH, const Real T, const Real Z_d,
 /* IMPLEMENTATION of FUCNTIONS                                                */
 /*----------------------------------------------------------------------------*/
 
-static Real fH2_CR(const Real nH, const Real T, const Real Z_d,
-                   const Real xi_CR);
+Real fH2_CR(const Real nH, const Real T, const Real Z_d, const Real xi_CR) {
+  Real kgr = 3.0e-17*Z_d;
+  Real R = kgr * nH / (2. * xi_CR);
+  Real b = - (1.65*1.5 + 2.*R);
+  Real a = 1.65*0.7;
+  Real c = R;
+  Real x_H2 = (-b - sqrt(b*b - 4*a*c) )/(2.*a);
+  return x_H2;
+}
+
+Real fH2_CR_FUV(const Real nH, const Real T, const Real Z_d, const Real xi_CR, 
+                const Real G_H2) {
+  Real kgr = 3.0e-17*Z_d;
+  Real R = kgr * nH / (2. * xi_CR);
+  Real a = 1.65*0.7;
+  Real c = R;
+  Real k_FUV = 5.7e-11 * G_H2;
+  Real b = - (1.65*1.5 + 2.*R + k_FUV/(2.*xi_CR));
+  Real x_H2 = (-b - sqrt(b*b - 4*a*c) )/(2.*a);
+  return x_H2;
+}
