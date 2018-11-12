@@ -65,18 +65,19 @@ abundances of chemical species. Sections \ref{section:heating} and
 Table \ref{table:input} list all the input parameters. The outputs are the
 heating rate $\Gamma$ and cooling rate $\Lambda$:
 \begin{equation}\label{eq:heating}
-    \Gamma(n_\Ho, T, Z, G_\mr{PE}) = \Gamma_\mr{PE} + \Gamma_\mr{CR} +
+    \Gamma(x_i, T, Z, \xi_H, G_\mr{PE}, G_\Ht) = \Gamma_\mr{PE} + \Gamma_\mr{CR} +
     \Gamma_\mr{H_2 pump},
 \end{equation}
 and
 \begin{align}\label{eq:cooling}
     \begin{split}
-    &\Lambda(n_\Ho, T, \langle |\di v/\di r| \rangle, Z, G_\mr{PE},  G_\CI,
-    G_\CO(,G_\Ht)) \\
+    &\Lambda(x_i, n_\Ho, T, \langle |\di v/\di r| \rangle, Z, G_\mr{PE}) \\
     &= \Lambda_\mr{Ly\alpha}+\Lambda_\OI + \Lambda_\Cplus +
     \Lambda_\CI + \Lambda_\CO + \Lambda_\mr{rec}.
     \end{split}
 \end{align}
+The relevant chemical abundances $x_i$ are listed in Table \ref{table:chem},
+and can be calculated from the input parameters.
 
 The details about these heating and cooling processes are explained in the
 following sections.
@@ -85,42 +86,44 @@ following sections.
     \centering
     \caption{Input parameters}
     \label{table:input}
-    \begin{tabular}{l l l}
+    \begin{tabular}{l l l l}
         \tableline
         \tableline
-        Symbol & Meaning & Note\\ 
+        Symbol & Meaning & Code Units & Note\\ 
         \tableline
-        \multicolumn{3}{l}{Hydro parameters:}\\
-        $n_\Ho$ & number density of hydrogen atoms & $\rho=1.4271 n_\Ho m_\Ho$
+        \multicolumn{4}{l}{Hydro parameters:}\\
+        $n_\Ho$ & number density of hydrogen atoms & $\mr{cm^{-3}}$ 
+        &$\rho=1.4271 n_\Ho m_\Ho$
         \\
-        $T$ & temperature & $T=\mu m_\Ho P/ (\rho k_b)$, $\mu$ is the molecular
-        weight\tablenotemark{a} 
+        $T$ & temperature &$\mr{K}$ 
+        &$T=\mu m_\Ho P/ (\rho k_b)$, $\mu$ is the molecular weight\tablenotemark{a} 
         \\
         $\langle |\di v/\di r| \rangle$ 
-        & the mean (absolute) velocity gradient\tablenotemark{b}
+        & the mean (absolute) velocity gradient\tablenotemark{b} &$\mr{s^{-1}}$
         & for LVG approximation in $\CO$ cooling 
         \\
-        \multicolumn{3}{l}{Radiation field strengths\tablenotemark{c}:}\\
-        $G_\mr{PE}$ &photo-electric heating &
+        \multicolumn{4}{l}{Radiation field strengths\tablenotemark{c}:}\\
+        $G_\mr{PE}$ &photo-electric heating &$G_0$ &
         $\gamma_\mr{PE} = 1.87$
         \\
-        $G_\CI$ &radiation field for $\CI$ to $\Cplus$ photo-ionization &
-        $\gamma_\CI = 3.76$
+        $G_\CI$ &radiation field for $\CI$ to $\Cplus$ photo-ionization 
+        &$G_0$ &$\gamma_\CI = 3.76$
         \\
         $G_\CO$ &$\CO$ photo-dissociation (only dust
-        shielding) & $\gamma_\CO = 3.88$. \Munan{Use the same $\gamma$
+        shielding)&$G_0$ & $\gamma_\CO = 3.88$. \Munan{Use the same $\gamma$
         for $\CI$ and $\CO$?}
         \\
         $G_\Ht$\tablenotemark{d} 
         &$\Ht$ photo-dissociation (dust- and self-
-        shielding) &dust shielding: $\gamma_\Ht=4.18$,
-        self-shielding from \citet{DB1996}.
+        shielding) &$G_0$ &dust shielding: $\gamma_\Ht=4.18$,\\
+        & & &self-shielding from \citet{DB1996}.
         \\
-        \multicolumn{3}{l}{Other parameters:}\\
-        $Z$ & metallicity & Assuming the same metallicity for gas and dust
-        $Z=Z_d=Z_g$
+        \multicolumn{4}{l}{Other parameters:}\\
+        $Z$ & metallicity &$Z_\odot$
+        &the same metallicity for gas and dust $Z=Z_d=Z_g$
         \\
         $\xi_\Ho$ & primary cosmic-ray ionization rate per $\Ho$ atom
+        & $\mr{s^{-1}H^{-1}}$
         & scales with star formation rate and surface density\tablenotemark{e}
         \\
 
@@ -136,11 +139,12 @@ following sections.
     simulation.}
     \tablenotetext{3}{For one-sided slab and only consider dust shielding,
     $G_i = G_0 \exp(-\gamma_i A_V) = G_0 \exp(-\sigma_i N_\Ho)$,
-    where $G_0$ is the interstellar radiation field (\Munan{The spectrum from
-    star clusters might be different?}), $A_V=N_\Ho/1.87\times
+    where $G_0 = 2.7 \times 10^{-3} \mr{erg~cm^{-2} s^{-1}}$
+    is the interstellar radiation field in \citet{Draine1978}
+    (\Munan{The spectrum from star clusters might be different?}), $A_V=N_\Ho/1.87\times
     10^{-21}\mr{cm^{-2}}$, and the cross-section $\sigma_i = (\gamma_i/1.87) \times
     10^{21}~\mr{cm^{-2}}$. }
-    \tablenotetext{3}{We only need to calculate $G_\Ht$ if we want to include
+    \tablenotetext{4}{We only need to calculate $G_\Ht$ if we want to include
     heating by UV-pumping of $\Ht$ (in high radiation field and low metallcitiy
     gas) or we want to calculate $\Ht$ abundances in cloud edges including FUV
     photo dissociation (not necessary in most cases, since $\Ht$ is considered
@@ -227,12 +231,99 @@ as a quadratic equation for $x_\Ht$:
 and the $\Ht$ abundance $x_\Ht=(-b - \sqrt{b^2 - 4ac} )/(2a)$. If $k_\gamma=0$,
 this recovers the result in \citet{GOK2018} without photo-dissociation.
 
-\subsection{$\mr{e^{-}}$, $\Cplus$ and $\Hplus$ Abundances\label{section:e}}
+\subsection{$\Cplus$, $\Hplus$ and $\mr{e^{-}}$ Abundances\label{section:e}}
+The $\Cplus$ equilibrium abundance is calculated from the balancing of the
+$\Cplus$ creation by cosmic-ray and FUV ionisation
+\begin{align*}
+    \mr{cr + C }&\mr{\rightarrow C^+ + e}\\
+    \mr{\gamma + C }&\mr{\rightarrow C^+ + e}\\
+\end{align*}
+and $\Cplus$ destruction by recombination (gas phase and on the grain surface)
+and reaction with $\Ht$
+\begin{align*}
+    \mr{C^+ + e }&\mr{\rightarrow\ C}\\
+    \mr{C^+ + e + gr }&\mr{\rightarrow C + gr}\\
+    \mr{C^+ + H_2 }&\mr{\rightarrow CH_2}
+\end{align*}
+
+On of the main creation and destruction channels for $\Hplus$ is 
+$\mr{O^+ + H \rightarrow H^+ + O}$ and $\mr{H^+ + O \rightarrow O^+ + H}$. 
+These two reactions are also the dominant channels for $\Oplus$ destruction and
+creation. The equilibrium of $\Oplus$ requires this two reactions to balance
+each other. Therefore, the $\Hplus$ creation and destruction from these two
+reactions cancel out, and we can obtain the $\Hplus$ abundances from the
+remaining important creation and destruction channels. We consider the $\Hplus$
+creation by cosmic ray ionization
+\begin{equation*}
+    \mr{cr + H\rightarrow H^+ + e}
+\end{equation*}
+and destruction by recombination in gas phase and grain surface
+\begin{align*}
+    \mr{H^+ + e}&\mr{\rightarrow H}\\
+    \mr{H^+ + e + gr}&\mr{\rightarrow H + gr}
+\end{align*}
+
+We assume most electrons comes from $\Hplus$ and $\Cplus$, which is true except
+for very shielded regions where the electron abundance is already very low
+\begin{equation*}
+    x_\e = x_\Hplus + x_\Cplus.
+\end{equation*}
+The neutral $\Ho$ is calculated assuming all hydrogen is in the from of $\Ho$,
+$\Ht$ or $\Hplus$
+\begin{equation*}
+    x_\Ho + x_\Ht + x_\Hplus = 1.
+\end{equation*}
+This is a good assumption, since the abundances of other species that contains
+hydrogen, $\mr{H_3^+}$, $\mr{H_2^+}$, $\CHx$, $\OHx$ and $\mr{HCO^+}$ is very
+low comparing to $\Ho$, $\Ht$ and $\Hplus$.
+
+With all the conditions above, the electron abundance can be solved
+iteratively. We use a iteration scheme similar to the Dekker's method
+(a combination of the secant method and bisection method) in root finding, 
+and found that the electron abundance
+is converged within about 10 iterations. After the electron abundance is
+obtained, $\Cplus$ and $\Hplus$ abundance can then be calculated from the
+equilibrium conditions.
+
 \subsection{$\CO$ Abundance\label{section:CO}}
+The $\CO$ abundance is calculated making use of the fitting function Equation
+(25) in \citet{GOW2016}:
+\begin{equation}\label{eq:CO_fit}
+    \frac{n_\mr{crit, CO}}{\mr{cm^{-3}}} 
+    = \left(4\times10^3 Z \xi_{\Ho,16}^{-2}\right)^{G_\CO^{1/3}}
+    \left( \frac{50  \xi_{\Ho,16}}{Z^{1.4}}\right),
+\end{equation}
+where $n_\mr{crit, CO}$ is the critical value above which 
+$x_\CO/x_\mr{C, tot} > 0.5$, $x_\mr{C, tot}$ the total carbon abundance, and
+$\xi_{\Ho,16}=\xi_\Ho/(10^{-16}\mr{s^{-1}H^{-1}})$.
+We set the $\CO$ abundance 
+\begin{equation*}
+    \frac{x_\CO}{x_\mr{C, tot}} =
+    \begin{cases}
+         1, & n_\Ho \geq 2 n_\mr{crit, CO}\\
+         \frac{n_\Ho}{2 n_\mr{crit, CO}}, & n_\Ho < 2 n_\mr{crit, CO}
+    \end{cases}
+\end{equation*}
+In addition, we put upper limits on the $\CO$ abundance, with 
+$x_\CO leq x_\mr{C, tot} - x_\Cplus$ (conservation of the carbon atoms)
+and $x_\CO/x_\mr{C, tot} leq 2 x_\Ht$
+(because $\Ht$ is a prerequisite for $\CO$ formation).
 
 \section{Heating}\label{section:heating}
 
 \section{Cooling}\label{section:cooling}
+
+\section{Notes for Implementation in TIGRESS}
+\begin{enumerate}
+    \item The input parameters must be in CGS units listed in Table
+        \ref{table:input}.
+    \item The output heating and cooling rates are in units of
+        $\mr{erg~s^{-1}~cm^{-3}}$.
+    \item If we want to ignore the FUV dissociation of $\Ht$ ($\Ht$ abundance
+        from only cosmic ray destruction, no heating from $\Ht$ UV pumping),
+        one just need to set $G_\Ht=0$ in the code.
+\end{enumerate}
+
 
 \bibliographystyle{apj}
 \bibliography{apj-jour,thesis}
