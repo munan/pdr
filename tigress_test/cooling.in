@@ -1,0 +1,5 @@
+#input cpp file,    output exe,   output dir (same as the last part of dir variable in the input cpp file)
+#sn_eq.c   sn_eq   out_sn_eq
+#sn.c   sn   out_sn
+Z0p1_eq.c   Z0p1_eq   out_Z0p1_eq
+#Z0p1.c   Z0p1      out_Z0p1

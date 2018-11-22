@@ -1,0 +1,37 @@
+SHELL = /bin/sh
+
+
+CC      = gcc
+#CFLAGS = -Wall -g3 -O0 -ggdb
+CFLAGS = -Wall -O3
+LIBS     = -lm 
+
+#source files
+SRCS = $(prob) cool_tigress.c
+
+#object files
+OBJS = $(SRCS:.cc=.o)
+
+#executable
+PROJ= $(exe)
+
+# -----------------------------------------------------------------------------------------
+
+.PHONY: depend clean
+
+all: $(PROJ)
+
+$(PROJ): $(OBJS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) 
+
+.cc.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	$(RM) *.o ../*.o
+	$(RM) .depend
+	$(RM) *.exe
+
+depend: $(SRCS)
+	makedepend  $^
+# -----------------------------------------------------------------------------------------

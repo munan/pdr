@@ -79,6 +79,7 @@ class NL99p : public Ode {
 		void SetGradv(const double gradv);
     /*Set to use global NCO for NCOeff or not*/
     void SetNCOeffGlobal(const bool isNCOeff_global);
+    void Setdvdr(const bool is_dvdr);
     void SetCoolingCOThin(const bool isCoolingCOThin);
     /*Set to bCO as a function of length scale or not*/
     void SetbCOL(const bool isbCO_L);
@@ -161,6 +162,7 @@ class NL99p : public Ode {
 		double bCO_;
     /*Set to use global value for NCOeff or not*/
     bool isNCOeff_global_;
+    bool is_dvdr_;
     /*Set to use bCO as a function of length scale or not.*/
     bool isbCO_L_;
     /*Set whether to use optically thin CO cooling (NCOeff = 0) */

@@ -1,18 +1,4 @@
 #input cpp file,    output exe,   output dir (same as the last part of dir variable in the input cpp file)
 #sn.cpp   sn   out_sn
-#G100.cpp   G100   out_G100
-#G100_CR1e-13.cpp   G100_CR1e-13   out_G100_CR1e-13
-#G100_CR1e-14.cpp   G100_CR1e-14   out_G100_CR1e-14
-#G100_CR1e-15.cpp   G100_CR1e-15   out_G100_CR1e-15
-#CR1e-17.cpp   CR1e-17   out_CR1e-17
-#CR1e-18.cpp   CR1e-18   out_CR1e-18
-#Z0p1.cpp     Z0p1     out_Z0p1
-#Z0p5.cpp     Z0p5     out_Z0p5
-#sn_cooling_H2CR.cpp   sn_cooling_H2CR   out_sn_cooling_H2CR
-#CR1e-15_cooling.cpp   CR1e-15_cooling   out_CR1e-15_cooling
-CR1e-13_cooling.cpp   CR1e-13_cooling   out_CR1e-13_cooling
-#CR1e-17_cooling.cpp   CR1e-17_cooling   out_CR1e-17_cooling
-CR1e-18_cooling.cpp   CR1e-18_cooling   out_CR1e-18_cooling
-Z0p1_cooling.cpp   Z0p1_cooling   out_Z0p1_cooling
-Z0p5_cooling.cpp   Z0p5_cooling   out_Z0p5_cooling
-G100_cooling.cpp   G100_cooling   out_G100_cooling
+#sn_tigress_eq.cpp   sn_tigress_eq   out_sn_tigress_eq
+Z0p1_tigress_eq.cpp   Z0p1_tigress_eq   out_Z0p1_tigress_eq

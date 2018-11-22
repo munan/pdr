@@ -89,7 +89,7 @@ CoolingFunction::~CoolingFunction(){
 }
 
 void CoolingFunction::ComputeAbundances() {
-  get_fH2_();
+  get_fH2_CR_();
   get_fe_();
   get_fCplus_();
   get_fHplus_();

@@ -308,6 +308,7 @@ NL99p::NL99p()
 	NCO_ = 0.;
 	NH_ = 0.;
   isNCOeff_global_ = false;
+  is_dvdr_ = false;
   isbCO_L_ = false;
   isCoolingCOThin_ = false;
 	dx_cell_ = 0;
@@ -927,6 +928,8 @@ double NL99p::dEdt_(const double *y, const bool is_store_rates) {
     } else {
       NCOeff = NCO / bCO_;
     }
+  } else if (is_dvdr_) {
+    NCOeff = nCO / gradv_;
   } else {
     /*TODO: dx_cell_ can't be too small*/
     if (gradv_ > vth / dx_cell_) {
@@ -998,6 +1001,11 @@ void NL99p::SetGradv(const double gradv) {
 
 void NL99p::SetNCOeffGlobal(const bool isNCOeff_global) {
   isNCOeff_global_ = isNCOeff_global;
+  return;
+}
+
+void NL99p::Setdvdr(const bool is_dvdr) {
+  is_dvdr_ = is_dvdr;
   return;
 }
 

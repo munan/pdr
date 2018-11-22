@@ -1,0 +1,477 @@
+%\documentclass[manuscript]{aastex}
+\documentclass[iop,numberedappendix]{emulateapj}
+\usepackage{natbib}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{graphicx, subfigure}
+\citestyle{aa}
+\usepackage{CJKutf8}
+\interfootnotelinepenalty=10000
+\newcommand{\Munan}[1]{{\color{red}#1}}
+\newcommand{\di}{\mathrm{d}} 
+\newcommand{\e}{\mathrm{e}} 
+\newcommand{\mr}{\mathrm} 
+\newcommand{\Ht}{\mathrm{H_2}} 
+\newcommand{\Ho}{\mathrm{H}} 
+\newcommand{\HI}{\mathrm{HI}} 
+\newcommand{\Hplus}{\mathrm{H^+}}
+\newcommand{\He}{\mathrm{He}} 
+\newcommand{\Heplus}{\mathrm{He^+}}
+\newcommand{\HCOplus}{\mathrm{HCO^+}}
+\newcommand{\CO}{\mathrm{CO}} 
+\newcommand{\CI}{\mathrm{CI}}
+\newcommand{\OI}{\mathrm{OI}}
+\newcommand{\Cplus}{\mathrm{C^+}} 
+\newcommand{\CHx}{\mathrm{CH_x}} 
+\newcommand{\CH}{\mathrm{CH}} 
+\newcommand{\OHx}{\mathrm{OH_x}} 
+\newcommand{\Oplus}{\mathrm{O^+}} 
+\newcommand{\Si}{\mathrm{Si}} 
+\newcommand{\Siplus}{\mathrm{Si^+}} 
+
+
+\defcitealias{GO2015}{GO15}
+
+\begin{document}
+\title{Improved heating and cooling in TIGRESS simulations}
+\author{Munan Gong (\begin{CJK*}{UTF8}{gbsn}龚慕南\end{CJK*})\altaffilmark{1}}
+\altaffiltext{1}{Max-Planck Institute for Extraterrestrial Physics,
+Garching by Munich, 85748, Germany; 
+munan@mpe.mpg.de}
+
+\begin{abstract}
+    Heating and cooling functions for neutral and molecular ISM in 
+    TIGRESS simulations \citep{KO2017}
+    based on equilibrium chemistry in \citet{GOW2016}.
+\end{abstract}
+
+\section{Introduction}
+The aim here is to develop physically motivated accurate 
+heating and cooling functions for the neutral and molecular ISM 
+($T<10^4~\mr{K}$ gas) that can better capture the gas thermo-dynamics than the
+simple heating and cooling functions from \citet{KI2002}. 
+For $T>10^4~\mr{K}$, the original implementation of
+collisional ionization equilibrium (CIE) cooling from \citet{SD1993} 
+should be used. 
+
+The heating and cooling functions in this work 
+take the hydro and radiation variables in the TIGRESS simulation and
+give the heating and cooling rates. The method here gives  
+results similar to the equilibrium chemistry, but does not require solving
+the full chemistry ODEs. The abundances of
+different species are calculated (semi-)analytically from equilibrium conditions.
+The heating and cooling rates can be subsequently calculated from analytic expressions
+or interpolation tables (in the case of $\CO$ rotational lines).
+
+Section \ref{section:para} gives a summary of the input and output parameters.
+Section \ref{section:chem} explains the calculation of the
+abundances of chemical species. Section \ref{section:heating_cooling} 
+describes the heating and cooling processes included. Section
+\ref{section:code_tests} presents some tests for the heating and cooling
+functions. Finally, Section \ref{section:notes} lists some notes for the
+implementation in the Athena-TIGRESS code.
+
+\section{Input and output parameters}\label{section:para}
+Table \ref{table:input} list all the input parameters. The outputs are the
+heating rate $\Gamma$ and cooling rate $\Lambda$:
+\begin{equation}\label{eq:heating}
+    \Gamma(x_i, T, Z, \xi_H, G_\mr{PE}, G_\Ht) = \Gamma_\mr{PE} + \Gamma_\mr{CR} +
+    \Gamma_\mr{H_2 pump},
+\end{equation}
+and
+\begin{align}\label{eq:cooling}
+    \begin{split}
+    &\Lambda(x_i, n_\Ho, T, \langle |\di v/\di r| \rangle, Z, G_\mr{PE}) \\
+    &= \Lambda_\mr{Ly\alpha}+\Lambda_\OI + \Lambda_\Cplus +
+    \Lambda_\CI + \Lambda_\CO + \Lambda_\mr{rec}.
+    \end{split}
+\end{align}
+The relevant chemical abundances $x_i$ are listed in Table \ref{table:chem},
+and can be calculated from the input parameters.
+
+The details about these heating and cooling processes are explained in the
+following sections.
+
+\begin{table*}[htbp]
+    \centering
+    \caption{Input parameters}
+    \label{table:input}
+    \begin{tabular}{l l l l}
+        \tableline
+        \tableline
+        Symbol & Meaning & Code Units & Note\\ 
+        \tableline
+        \multicolumn{4}{l}{Hydro parameters:}\\
+        $n_\Ho$ & number density of hydrogen atoms & $\mr{cm^{-3}}$ 
+        &$\rho=1.4271 n_\Ho m_\Ho$
+        \\
+        $T$ & temperature &$\mr{K}$ 
+        &$T=\mu m_\Ho P/ (\rho k_b)$, $\mu$ is the molecular weight\tablenotemark{a} 
+        \\
+        $\langle |\di v/\di r| \rangle$ 
+        & the mean (absolute) velocity gradient\tablenotemark{b} &$\mr{s^{-1}}$
+        & for LVG approximation in $\CO$ cooling 
+        \\
+        \multicolumn{4}{l}{Radiation field strengths\tablenotemark{c}:}\\
+        $G_\mr{PE}$ &photo-electric heating &$G_0$ &
+        $\gamma_\mr{PE} = 1.87$
+        \\
+        $G_\CI$ &radiation field for $\CI$ to $\Cplus$ photo-ionization 
+        &$G_0$ &$\gamma_\CI = 3.76$
+        \\
+        $G_\CO$ &$\CO$ photo-dissociation (only dust
+        shielding)&$G_0$ & $\gamma_\CO = 3.88$. \Munan{Use the same $\gamma$
+        for $\CI$ and $\CO$?}
+        \\
+        $G_\Ht$\tablenotemark{d} 
+        &$\Ht$ photo-dissociation (dust- and self-
+        shielding) &$G_0$ &dust shielding: $\gamma_\Ht=4.18$,\\
+        & & &self-shielding from \citet{DB1996}.
+        \\
+        \multicolumn{4}{l}{Other parameters:}\\
+        $Z$ & metallicity &$Z_\odot$
+        &the same metallicity for gas and dust $Z=Z_d=Z_g$
+        \\
+        $\xi_\Ho$ & primary cosmic-ray ionization rate per $\Ho$ atom
+        & $\mr{s^{-1}H^{-1}}$
+        & scales with star formation rate and surface density\tablenotemark{e}
+        \\
+
+        \tableline
+    \end{tabular}
+    \tablenotetext{1}{$\mu = [m_\mathrm{He, tot} x_\mathrm{He, tot} +
+    m_\Ht x_\Ht + m_\Ho (1-x_\Ht) ]/ [m_\Ho (x_\mathrm{He,tot} + x_\Ht +
+    (1-2x_\Ht) + x_\e)] = (m_\mathrm{He, tot} x_\mathrm{He, tot} + m_\Ho) /
+    [m_\Ho (x_\mathrm{He,tot} + 1 - x_\Ht + x_\e)] = 
+    1.4271 / (x_\mathrm{He,tot} + 1 - x_\Ht + x_\e)$. $T=P/[n_\Ho k_b
+    (x_\mathrm{He,tot} + 1 - x_\Ht + x_\e)]$.}
+    \tablenotetext{2}{Averaged across the six faces of each grid cell in the
+    simulation.}
+    \tablenotetext{3}{For one-sided slab and only consider dust shielding,
+    $G_i = G_0 \exp(-\gamma_i A_V) = G_0 \exp(-\sigma_i N_\Ho)$,
+    where $G_0 = 2.7 \times 10^{-3} \mr{erg~cm^{-2} s^{-1}}$
+    is the interstellar radiation field in \citet{Draine1978}
+    (\Munan{The spectrum from star clusters might be different?}), $A_V=N_\Ho/1.87\times
+    10^{-21}\mr{cm^{-2}}$, and the cross-section $\sigma_i = (\gamma_i/1.87) \times
+    10^{21}~\mr{cm^{-2}}$. }
+    \tablenotetext{4}{We only need to calculate $G_\Ht$ if we want to include
+    heating by UV-pumping of $\Ht$ (in high radiation field and low metallcitiy
+    gas) or we want to calculate $\Ht$ abundances in cloud edges including FUV
+    photo dissociation (not necessary in most cases, since $\Ht$ is considered
+    to be affected by non-equilibrium chemistry).}
+    \tablenotetext{5}{For the solar neighborhood,
+    $\xi_\Ho \approx 2\times 10^{-16}~\mr{s^{-1} H^{-1}}$. 
+    $\xi_{-16} = 0.472
+    \frac{\Sigma_\mathrm{SFR,-3}}{\Sigma_\mathrm{gas}/50M_\odot\mathrm{pc^{-2}}
+    + 1}$, $\xi_{-16} = \xi_\Ho / 10^{-16}\mr{s^{-1} H^{-1}}$, 
+    $\Sigma_\mathrm{SFR,-3} =
+    \Sigma_\mathrm{SFR}/10^{-3}M_\odot\mathrm{kpc^{-2}Myr^{-1}}$.}
+\end{table*}
+
+\section{Chemical Abundances}\label{section:chem}
+In order to calculate the heating and cooling rates in Equations
+(\ref{eq:heating}) and (\ref{eq:cooling}), we need to know the chemical
+abundances of the species listed in Table \ref{table:chem}. We explain the
+calculation of the abundances of these species below. 
+\begin{table*}[htbp]
+    \centering
+    \caption{Chemical species}
+    \label{table:chem}
+    \begin{tabular}{l l l}
+        \tableline
+        \tableline
+        Species & Abundance calculation & Dependence\\ 
+        \tableline
+        $\Ht$ & analytic, see Section \ref{section:H2}
+        & $n_\Ho$, $T$, $Z_d$, $\xi_\Ho$ (and $G_\Ht$)
+        \\
+        $\mr{e^-}$ & iterative, assumes $x_\e=x_\Hplus + x_\Cplus$, 
+        see Section \ref{section:e} 
+        & $x_\Ht$, $n_\Ho$, $T$, $Z_d$, $Z_g$, $\xi_\Ho$, $G_\mr{PE}$, $G_\CI$
+        \\
+        $\Cplus$ &analytic, see Section \ref{section:e} 
+        & $x_\e$, $x_\Ht$, $n_\Ho$, $T$, $Z_d$, $Z_g$, 
+        $\xi_\Ho$, $G_\mr{PE}$, $G_\CI$
+        \\
+        $\Hplus$ & analytic, see Section \ref{section:e} 
+        & $x_\e$, $x_\Ht$, $x_\Cplus$, $n_\Ho$, $T$, $Z_d$,
+        $\xi_\Ho$, $G_\mr{PE}$
+        \\
+        $\CO$ &analytic, see Section \ref{section:CO} 
+        & $x_\Ht$, $x_\Cplus$, $n_\Ho$, $Z_d$, $Z_g$, 
+        $\xi_\Ho$, $G_\CO$
+        \\
+        $\HI$ &elemental conservation & $x_\HI = 1 - 2x_\Ht - x_\Hplus$ 
+        \\
+        $\CI$ &elemental conservation & $x_\CI = x_\mr{C,tot} - x_\Cplus -
+        x_\CO$ 
+        \\
+        $\OI$ &elemental conservation & $x_\OI = x_\mr{O,tot} - x_\CO$ 
+        \\
+        \tableline
+    \end{tabular}
+\end{table*}
+
+\subsection{$\Ht$ Abundance\label{section:H2}}
+The $\Ht$ abundance can be obtained from Equation (18) in \citet{GOK2018}:
+\begin{equation}\label{eq:GOK2018_eq18}
+    f_\Ht n_\Ho k_\mr{gr} = 1.65 f_\Ht k_\mr{CR}.
+\end{equation}
+The left hand side is the rate of $\Ht$ formation on dust grains. On the right
+hand side, $f_\Ht k_\mr{CR}$ is the destruction of $\Ht$ by cosmic rays, and
+the $1.65$ factor comes from additional channels of $\Ht$ destruction by
+$\mr{H_2^+}$ and $\Ht$ formation by $\mr{H_3^+}$. If we take the
+photo-dissociation of $\Ht$ by FUV radiation into account, which can be
+important at the edge of the cloud especially when the cosmic ray ionization
+rate is low, then Equation (\ref{eq:GOK2018_eq18}) becomes:
+\begin{equation}\label{eq:H2}
+    f_\Ht n_\Ho k_\mr{gr} = 1.65 f_\Ht k_\mr{CR} + f_\Ht k_\gamma,
+\end{equation}
+where $k_\gamma=5.7\times 10^{-11}G_\Ht~\mr{s^{-1}}$ is the photo-dissociation
+rate of $\Ht$. Using $x_\HI = 1-2x_\Ht$ and
+$k_\mr{CR}=2\xi_\Ho(2.3x_\Ht+1.5x_\HI)$, Equation (\ref{eq:H2}) can be written
+as a quadratic equation for $x_\Ht$:
+\begin{align}
+    &a x_\Ht^2 + bx_\Ht + c = 0\\
+    &a = 1.155\\
+    &b=- (2.475 + 2R + \frac{k_\gamma}{2\xi_\Ho}),
+    ~R=\frac{k_\mr{gr}n_\Ho}{2\xi_\Ho}\\
+    &c=R,
+\end{align}
+and the $\Ht$ abundance $x_\Ht=(-b - \sqrt{b^2 - 4ac} )/(2a)$. If $k_\gamma=0$,
+this recovers the result in \citet{GOK2018} without photo-dissociation.
+
+\subsection{$\Cplus$, $\Hplus$ and $\mr{e^{-}}$ Abundances\label{section:e}}
+The $\Cplus$ equilibrium abundance is calculated from the balancing of the
+$\Cplus$ creation by cosmic-ray and FUV ionisation
+\begin{align*}
+    \mr{cr + C }&\mr{\rightarrow C^+ + e}\\
+    \mr{\gamma + C }&\mr{\rightarrow C^+ + e}\\
+\end{align*}
+and $\Cplus$ destruction by recombination (gas phase and on the grain surface)
+and reaction with $\Ht$
+\begin{align*}
+    \mr{C^+ + e }&\mr{\rightarrow\ C}\\
+    \mr{C^+ + e + gr }&\mr{\rightarrow C + gr}\\
+    \mr{C^+ + H_2 }&\mr{\rightarrow CH_2}
+\end{align*}
+
+On of the main creation and destruction channels for $\Hplus$ is 
+$\mr{O^+ + H \rightarrow H^+ + O}$ and $\mr{H^+ + O \rightarrow O^+ + H}$. 
+These two reactions are also the dominant channels for $\Oplus$ destruction and
+creation. The equilibrium of $\Oplus$ requires this two reactions to balance
+each other. Therefore, the $\Hplus$ creation and destruction from these two
+reactions cancel out, and we can obtain the $\Hplus$ abundances from the
+remaining important creation and destruction channels. We consider the $\Hplus$
+creation by cosmic ray ionization
+\begin{equation*}
+    \mr{cr + H\rightarrow H^+ + e}
+\end{equation*}
+and destruction by recombination in gas phase and grain surface
+\begin{align*}
+    \mr{H^+ + e}&\mr{\rightarrow H}\\
+    \mr{H^+ + e + gr}&\mr{\rightarrow H + gr}
+\end{align*}
+
+We assume most electrons comes from $\Hplus$ and $\Cplus$, which is true except
+for very shielded regions where the electron abundance is already very low
+\begin{equation*}
+    x_\e = x_\Hplus + x_\Cplus.
+\end{equation*}
+The neutral $\Ho$ is calculated assuming all hydrogen is in the from of $\Ho$,
+$\Ht$ or $\Hplus$
+\begin{equation*}
+    x_\HI + x_\Ht + x_\Hplus = 1.
+\end{equation*}
+This is a good assumption, since the abundances of other species that contains
+hydrogen, $\mr{H_3^+}$, $\mr{H_2^+}$, $\CHx$, $\OHx$ and $\mr{HCO^+}$ is very
+low comparing to $\Ho$, $\Ht$ and $\Hplus$.
+
+With all the conditions above, the electron abundance can be solved
+iteratively. We use a iteration scheme similar to the Dekker's method
+(a combination of the secant method and bisection method) in root finding, 
+and found that the electron abundance
+is converged within about 10 iterations. After the electron abundance is
+obtained, $\Cplus$ and $\Hplus$ abundance can then be calculated from the
+equilibrium conditions.
+
+\subsection{$\CO$ Abundance\label{section:CO}}
+The $\CO$ abundance is calculated making use of the fitting function Equation
+(25) in \citet{GOW2016}:
+\begin{equation}\label{eq:CO_fit}
+    \frac{n_\mr{crit, CO}}{\mr{cm^{-3}}} 
+    = \left(4\times10^3 Z \xi_{\Ho,16}^{-2}\right)^{G_\CO^{1/3}}
+    \left( \frac{50  \xi_{\Ho,16}}{Z^{1.4}}\right),
+\end{equation}
+where $n_\mr{crit, CO}$ is the critical value above which 
+$x_\CO/x_\mr{C, tot} > 0.5$, $x_\mr{C, tot}$ the total carbon abundance, and
+$\xi_{\Ho,16}=\xi_\Ho/(10^{-16}\mr{s^{-1}H^{-1}})$.
+We set the $\CO$ abundance 
+\begin{equation*}
+    \frac{x_\CO}{x_\mr{C, tot}} =
+    \begin{cases}
+         1, & n_\Ho \geq 2 n_\mr{crit, CO}\\
+         \frac{n_\Ho}{2 n_\mr{crit, CO}}, & n_\Ho < 2 n_\mr{crit, CO}
+    \end{cases}
+\end{equation*}
+In addition, we put upper limits on the $\CO$ abundance, with 
+$x_\CO \leq x_\mr{C, tot} - x_\Cplus$ (conservation of the carbon atoms)
+and $x_\CO/x_\mr{C, tot} \leq 2 x_\Ht$
+(because $\Ht$ is a prerequisite for $\CO$ formation).
+
+\section{Heating and Cooling}\label{section:heating_cooling}
+The heating and cooling processes included are listed in Table
+\ref{table:thermo}. For the details, please see \citet{GOW2016}.
+\begin{table*}[htbp]
+    \centering
+    \caption{List of Heating and Cooling Processes}
+    \label{table:thermo}
+    \begin{tabular}{l  l}
+        \tableline
+        \tableline
+        Process &Dependence\\ 
+        \tableline
+        \multicolumn{2}{l}{Heating:}\\
+        Cosmic-ray ionization of $\Ho$, $\Ht$ and $\He$ 
+        &$x_\e$, $x_\HI$, $x_\Ht$, $n_\Ho$, $\xi_\Ho$\\
+        Photoelectric effect on dust grains 
+        &$x_\e$, $n_\Ho$, $T$, $Z_d$, $G_\mr{PE}$ \\
+        UV pumping of $\Ht$\tablenotemark{a}
+        &$x_\HI$, $x_\Ht$, $n_\Ho$, $T$, $G_\Ht$\\
+
+        \multicolumn{2}{l}{Cooling:}\\
+        Ly$\alpha$ line & $x_\e$, $x_\HI$, $n_\Ho$, $T$\\
+        $\mr{O}$ fine structure line 
+        &$x_\e$, $x_\OI$, $x_\HI$, $x_\Ht$, $n_\Ho$, $T$\\
+        $\mr{C^+}$ fine structure line 
+        &$x_\e$, $x_\Cplus$, $x_\HI$, $x_\Ht$, $n_\Ho$, $T$\\
+        $\mr{C}$ fine structure line 
+        &$x_\e$, $x_\CI$, $x_\HI$, $x_\Ht$, $n_\Ho$, $T$\\
+        $\CO$ rotational lines 
+        &$x_\e$, $x_\CO$, $x_\HI$, $x_\Ht$, $n_\Ho$, $T$, 
+        $\langle |\di v/\di r| \rangle$\\
+        Recombination of $\mr{e}$ on PAHs 
+        &$x_\e$, $n_\Ho$, $T$, $Z_d$, $G_\mr{PE}$\\
+        \tableline
+    \end{tabular}
+    \tablenotetext{1}{Important at low metalicities. \Munan{reference?}}
+\end{table*}
+
+\section{Code Tests}\label{section:code_tests}
+The benchmark for our model is the heating and cooling
+rates from equilibrium chemistry calculations in \citet{GOW2016}. We also
+compare our results with the cooling function from \citet{KI2002}.
+The comparisons below 
+are made with unshielded (except for $\Ht$ because of its very efficient
+self-shielding) gas in solar neighbourhood and low metallicity conditions:
+$Z=0.1, 1$, 
+$\xi_\Ho = 2\times 10^{-16}~\mr{s^{-1} H^{-1}}$, $G_\mr{PE}=G_\CI=G_\CO=1$ 
+(in \citet{Draine1978} units), $G_\Ht=0$, and
+$\langle |\di v/\di r| \rangle = 9\times 10^{-14}~\mr{s^{-1}}$.
+
+The comparisons are shown in Figure \ref{fig:code_tests_sn}
+\ref{fig:code_tests_Z0p1}. The heating and
+cooling rates from this work agree with that from the equilibrium chemistry in
+\citet{GOW2016} within a factor of $\sim 2$. Compared to the results from the
+equilibrium chemistry model, the heating rates from \citet{KI2002} 
+are much lower, but the cooling rates are in good agreement. There is a larger
+difference when the temperature is not in equilibrium, especially for the
+cooling rates (gray lines in Figure
+\ref{fig:code_tests_sn} and \ref{fig:code_tests_Z0p1}).
+
+\begin{figure*}[htbp]
+     \begin{center}
+%
+        \subfigure[Heating]{%
+            \includegraphics[width=0.49\textwidth]{../fig/heating.pdf}
+        }%
+        \subfigure[Cooling]{%
+           \includegraphics[width=0.49\textwidth]{../fig/cooling.pdf}
+        } 
+
+    \end{center}
+    \caption{Comparisons of heating and cooling rates for $Z=1$. The black solid lines
+    are the heating and cooling functions from \citet{KI2002} used in
+    \citet{KO2017}. The blue solid lines are the results from equilibrium
+    chemistry and temperature calculations by \citet{GOW2016} at densities 
+    $n_\Ho=0.1-1000~\mr{cm^{-3}}$. The equilibrium temperature from
+    \citet{GOW2016} at different densities is shown in Figure \ref{fig:nH_T}.
+    The red solid lines show the heating and cooling rates
+    from this work with the gas at these densities and equilibrium temperatures.
+    The gray lines show the results from this work with fixed densities 
+    $n_\Ho=0.1~\mr{cm^{-3}}$ (dotted), $n_\Ho=1~\mr{cm^{-3}}$ (dash-dotted), 
+    and $n_\Ho=100~\mr{cm^{-3}}$ (dashed).
+        \label{fig:code_tests_sn}
+    }
+\end{figure*}
+
+\begin{figure*}[htbp]
+     \begin{center}
+%
+        \subfigure[Heating]{%
+            \includegraphics[width=0.49\textwidth]{../fig/heating_Z0p1.pdf}
+        }%
+        \subfigure[Cooling]{%
+           \includegraphics[width=0.49\textwidth]{../fig/cooling_Z0p1.pdf}
+        } 
+
+    \end{center}
+    \caption{caption.
+        \label{fig:code_tests_Z0p1}
+    }
+\end{figure*}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{../fig/equilibrium_temperature.pdf}
+\caption{caption}
+\label{fig:nH_T}
+\end{figure}
+
+
+
+\section{Notes for Implementation in TIGRESS}\label{section:notes}
+\begin{enumerate}
+    \item The input parameters must be in CGS units listed in Table
+        \ref{table:input}.
+    \item The output heating and cooling rates are in units of
+        $\mr{erg~s^{-1}~cm^{3}}$.
+    \item Because the heating and cooling rates has a step of dividing by
+        $n_\Ho$, one needs to make sure that $n_\Ho > 0$ (use density floor). 
+    \item If we want to ignore the FUV dissociation of $\Ht$ ($\Ht$ abundance
+        from only cosmic ray destruction, no heating from $\Ht$ UV pumping),
+        one just need to set $G_\Ht=0$ in the code.
+\end{enumerate}
+
+
+\bibliographystyle{apj}
+\bibliography{apj-jour,thesis}
+\end{document}
+
+\citet[][hereafter \citetalias{GO2015}]{GO2015}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{somefig.pdf}
+\caption{caption}
+\label{fig:somefig}
+\end{figure}
+
+\begin{table*}[htbp]
+    \caption{caption}
+    \label{table:some table}
+    \begin{tabular}{l l l l l}
+        \tableline
+        \tableline
+        No. &Reaction &Rate coefficient\tablenotemark{a} &Notes
+        &Reference\\ 
+        \tableline
+        \multicolumn{5}{l}{Grain-assisted reactions:}\\
+        1 &$\mathrm{H + H + gr \rightarrow H_2 + gr}$ 
+        &$3.0\times 10^{-17}$ & &1, 2\\
+        
+        \tableline
+    \end{tabular}
+    \tablenotetext{1}{}
+\end{table*}

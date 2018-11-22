@@ -23,7 +23,7 @@ const double Thermo::A10CII_ = 2.3e-6; /*Silva+Viegas2002*/
 const double Thermo::E10CII_ = 1.26e-14;
 const double Thermo::g0CII_ = 2.;
 const double Thermo::g1CII_ = 4.;
-/*----HI+, 2 level system---*/
+/*----HI, 2 level system---*/
 const double Thermo::A10HI_ = 6.265e8;
 const double Thermo::E10HI_ = 1.634e-11;
 const double Thermo::g0HI_ = 1.;
