@@ -13,12 +13,10 @@ class Shielding {
     ~Shielding();
 		static double fShield_CO_vDB(const double NCO, const double NH2);
     /*CO sheilding from Visser+2009, Table 5*/
-    /*TODO: change b(CO) or Tex(CO)?*/
 		static double fShield_CO_V09(const double NCO, const double NH2);
     /*H2 self shielding from Draine+Bertoldi1996*/
-    /*TODO: talk to Bruce!*/
 		static double fShield_H2(const double NH2, const double bH2);
-    /*CI self shielding. TODO: ref from Mark wolfire*/
+    /*CI self shielding.*/
 		static double fShield_C(const double NC, const double NH2);
     /*CI shielding of CO*/
 		static double fShield_CO_C(const double NC);

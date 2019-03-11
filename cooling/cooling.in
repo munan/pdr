@@ -1,4 +1,0 @@
-#input cpp file,    output exe,   output dir (same as the last part of dir variable in the input cpp file)
-#sn.cpp   sn   out_sn
-#sn_tigress_eq.cpp   sn_tigress_eq   out_sn_tigress_eq
-Z0p1_tigress_eq.cpp   Z0p1_tigress_eq   out_Z0p1_tigress_eq

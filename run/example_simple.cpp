@@ -3,16 +3,16 @@
  * Use to make plot for chemical species abundances at grids of nH and NH.
  */
 
-#include "NL99p.h"
+#include "gow17.h"
 #include "cvodeDense.h"
 #include "slab.h"
 #include "math.h"
 #include <stdio.h>
 
 int main() {
-  NL99p odeNL99;
+  gow17 odegow17;
 	const double t0 = 0;
-	const int dim = odeNL99.Dimen();
+	const int dim = odegow17.Dimen();
 	double y0[dim]; 
   double abstol[dim];
   const double reltol = 1.0e-2;//relative tolerance of the ode solver 
@@ -57,9 +57,7 @@ int main() {
 	//const double nH2G0 = 94. / ( 1. + 3.1*pow(Zdg, 0.365) ); /*nH/G0 constant in CNM*/
 	long int slab_id = 0;
   //output directory. Note this should be the same as that in examples.in
-	const char dir[] 
-	 =
-   "/Users/munangong/chemistry_Athena/PDR_cvode/out_example_simple/";
+	const char dir[] = "../out_example_simple/";
 	char fn_nH[100];  
   sprintf(fn_nH, "%snH_arr.dat", dir);
 	char fn_colH[100];  
@@ -69,7 +67,7 @@ int main() {
 	char fn_chemnet[100];  
   sprintf(fn_chemnet, "%schemnet.dat", dir);
 	FILE *pf_chemnet = fopen(fn_chemnet, "w+");
-  odeNL99.PrintChemNet(pf_chemnet);
+  odegow17.PrintChemNet(pf_chemnet);
   fclose(pf_chemnet);
 
 	/*initialize y0 and absolute tolerance*/
@@ -77,49 +75,49 @@ int main() {
 		abstol[i] = abstol0;
 		y0[i] = 0.;
 	}
-	y0[odeNL99.id("He+")] = 1.450654e-08;
-	y0[odeNL99.id("H3+")] = 2.681411e-07;
-	y0[odeNL99.id("C+")] = 0.0001;
-	y0[odeNL99.id("S+")] = 2.7e-6 * 0;
-	y0[odeNL99.id("Si+")] = 1.e-6 * 0;
-	y0[odeNL99.id("CO")] = 1.0e-7;
-	y0[odeNL99.id("H2")] = 0.1;
-	y0[odeNL99.id("E")] = odeNL99.GetE(temp, 0.1, 0.);
+	y0[odegow17.id("He+")] = 1.450654e-08;
+	y0[odegow17.id("H3+")] = 2.681411e-07;
+	y0[odegow17.id("C+")] = 0.0001;
+	y0[odegow17.id("S+")] = 2.7e-6 * 0;
+	y0[odegow17.id("Si+")] = 1.e-6 * 0;
+	y0[odegow17.id("CO")] = 1.0e-7;
+	y0[odegow17.id("H2")] = 0.1;
+	y0[odegow17.id("E")] = odegow17.GetE(temp, 0.1, 0.);
 
-	abstol[odeNL99.id("He+")] = 1e-15;
-	abstol[odeNL99.id("OHx")] = 1.0e-15;
-	abstol[odeNL99.id("CHx")] = 1.0e-15;
-	abstol[odeNL99.id("CO")] = 1.0e-15;
-	abstol[odeNL99.id("C+")] = 1.0e-15;
-	abstol[odeNL99.id("HCO+")] = 1.0e-30;
-	abstol[odeNL99.id("H2")] = 1.0e-8;
-	abstol[odeNL99.id("H+")] = 1.0e-15;
-	abstol[odeNL99.id("H3+")] = 1.0e-15;
-	abstol[odeNL99.id("H2+")] = 1.0e-15;
-	abstol[odeNL99.id("E")] = odeNL99.GetE(1., 0.1, 0);
+	abstol[odegow17.id("He+")] = 1e-15;
+	abstol[odegow17.id("OHx")] = 1.0e-15;
+	abstol[odegow17.id("CHx")] = 1.0e-15;
+	abstol[odegow17.id("CO")] = 1.0e-15;
+	abstol[odegow17.id("C+")] = 1.0e-15;
+	abstol[odegow17.id("HCO+")] = 1.0e-30;
+	abstol[odegow17.id("H2")] = 1.0e-8;
+	abstol[odegow17.id("H+")] = 1.0e-15;
+	abstol[odegow17.id("H3+")] = 1.0e-15;
+	abstol[odegow17.id("H2+")] = 1.0e-15;
+	abstol[odegow17.id("E")] = odegow17.GetE(1., 0.1, 0);
 
-  CvodeDense cvodeDense(odeNL99, reltol, abstol);
+  CvodeDense cvodeDense(odegow17, reltol, abstol);
 	cvodeDense.SetMxsteps(mxsteps);
 	cvodeDense.SetMaxOrd(3);
 
-	//odeNL99.SetConstTemp(temp); //set temperature to be constant
+	//odegow17.SetConstTemp(temp); //set temperature to be constant
   //parameters for CO cooling
-  odeNL99.SetGradv(3 * 3e-14);
-  odeNL99.SetNCOeffGlobal(true);
-  //odeNL99.SetbCO(1 * 1e5);
-  odeNL99.SetbCOL(true);
+  odegow17.SetGradv(3 * 3e-14);
+  odegow17.SetNCOeffGlobal(true);
+  //odegow17.SetbCO(1 * 1e5);
+  odegow17.SetbCOL(true);
   //CR ionisation rate
-  odeNL99.SetIonRate(2e-16);
+  odegow17.SetIonRate(2e-16);
   //dust and gas metallicity
-  odeNL99.SetZg(Zdg);
+  odegow17.SetZg(Zdg);
 
   //Set grain reaction rates
-  odeNL99.SetfH2gr(10./sqrt(temp));
-  odeNL99.SetfHplusgr(0.6);
-  odeNL99.SetfHeplusgr(0.6);
-  odeNL99.SetfCplusgr(0.6);
-  odeNL99.SetfSplusgr(0.6);
-  odeNL99.SetfSiplusgr(0.6);
+  odegow17.SetfH2gr(10./sqrt(temp));
+  odegow17.SetfHplusgr(0.6);
+  odegow17.SetfHeplusgr(0.6);
+  odegow17.SetfCplusgr(0.6);
+  odegow17.SetfSplusgr(0.6);
+  odegow17.SetfSiplusgr(0.6);
   
 	bool isWriteNH = true;
 	for (nH=nH_first; nH<nH_last; nH*=nH_fac) {
@@ -130,11 +128,11 @@ int main() {
 		FILE *pf = fopen(file_slab, "w+");
 		FILE *pf_rates = fopen(file_rates, "w+");
 		//G0 = nH / nH2G0;
-    //odeNL99.SetIonRate(2e-16 * sqrt(G0));
+    //odegow17.SetIonRate(2e-16 * sqrt(G0));
     G0 = 1.; //incident radiation field strength
-		odeNL99.SetInit(t0, y0);
-		odeNL99.SetnH(nH);
-		Slab *myslab = new Slab(odeNL99, cvodeDense, ngrid, NH_total, G0, Zdg,
+		odegow17.SetInit(t0, y0);
+		odegow17.SetnH(nH);
+		Slab *myslab = new Slab(odegow17, cvodeDense, ngrid, NH_total, G0, Zdg,
                             islogNH, NH_min);
     myslab->SetFieldGeo(field_geo);
 		myslab->IsH2MolSheilding(isfsH2);
@@ -183,7 +181,7 @@ int main() {
 
 	/*write parameters of the last slab to file*/
 	FILE *pf_para = fopen(fn_para, "w+");
-	odeNL99.WriteParam(pf_para);
+	odegow17.WriteParam(pf_para);
 	fprintf(pf_para, "reltol = %0.4e\n", reltol);
 	fprintf(pf_para, "tolfac = %0.4e\n", tolfac);
 	fprintf(pf_para, "tmin = %0.4e\n", tmin);

@@ -1,6 +1,6 @@
 #include "slab.h"
 
-Slab::Slab(NL99p &ode, CvodeDense &solver,
+Slab::Slab(gow17 &ode, CvodeDense &solver,
 		       const long int ngrid, const double NH_total,
            const double G0, const double Zd,
            const bool logNH, const double NH_min)

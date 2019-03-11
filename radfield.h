@@ -1,12 +1,12 @@
 /* Date: Oct 2, 2015, Author: Munan Gong
- * Radiation field for NL99p network
+ * Radiation field for gow17 network
  */
 #ifndef RADFIELD_H_
 #define RADFIELD_H_
 
 #include <stdio.h>
 #include "thermo.h"
-#include "NL99p.h"
+#include "gow17.h"
 #include <math.h>
 
 const double pi = 3.1415926535897;
@@ -14,8 +14,7 @@ const double pi = 3.1415926535897;
 /*ISRF strengh, normalized to Solar neighborhood value.
  *In Draine 1978 field, G0 = 1.*/
 class RadField {
-  friend class NL99p;
-  friend class NL99o;
+  friend class gow17;
   public:
     RadField(const long int ngrid, const double G0, const double Zd);
     ~RadField();
@@ -23,7 +22,7 @@ class RadField {
     double *GPE; 
     /*ISRF*/
     double *GISRF; 
-    /*photo reactions of NL99p network, including dust and self shielding for
+    /*photo reactions of gow17 network, including dust and self shielding for
      * CO and H2, Gph[igrid][ispec]*/
     double **Gph;
     /*calculate radiation field, and store in igrid*/

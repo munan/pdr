@@ -1,19 +1,18 @@
 /*Date: June 2, 2015, Author: Munan Gong
  * Grid of a plane-parallel slab.
- * TODO: implement both beamed and isotropic radiation.
  */
 
 #ifndef SLAB_H_
 #define SLAB_H_
 
-#include "NL99p.h"
+#include "gow17.h"
 #include "cvodeDense.h"
 #include <stdio.h>
 
 class Slab {
   friend class CoolingFunction;
 	public:
-		Slab(NL99p &ode, CvodeDense &solver,
+		Slab(gow17 &ode, CvodeDense &solver,
 				 const long int ngrid, const double NH_total, const double G0,
          const double Zd, const bool logNH=false, const double NH_min=1.0e18);
 		~Slab();
@@ -43,9 +42,7 @@ class Slab {
     void SetFieldGeo(int field_geo);
 
 	private:
-		/*TODO: think about new data structure of only have one ode system,
-		 * but store chemical species in an array that belongs to the grid*/
-		NL99p &ode_;
+		gow17 &ode_;
 		CvodeDense &solver_;
     RadField *prad_;
 		const int dimen_; /*dimention of ode*/

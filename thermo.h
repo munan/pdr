@@ -1,6 +1,5 @@
 /* Date: June, 19, 2015. Author: Munan Gong
  * Heating and cooling processes.
- * TODO: add latent heat for H2 <-> H
  */
 
 #ifndef THERMO_H_
@@ -9,8 +8,7 @@
 #include "interp.h"
 
 class Thermo {
-  friend class NL99p;
-  friend class NL99o;
+  friend class gow17;
   friend class RadField;
   friend class CoolingFunction;
 	public:
@@ -45,10 +43,9 @@ class Thermo {
      * Arguments:
      * xi = ni/nH
      * T: temperature in K
-     * kgr: grain reaction rates, kgr_ in NL99p. 
+     * kgr: grain reaction rates, kgr_ in gow17. 
      * Return:
-     * Heating rate by H2 formation on dust grains in erg H^-1 s^-1.
-     * TODO: to be tested with chemistry network */
+     * Heating rate by H2 formation on dust grains in erg H^-1 s^-1. */
     static double HeatingH2gr(const double xHI, const double xH2, const double nH,
                        const double T, const double kgr);
     /* Heating by H2 UV pumping.
@@ -57,21 +54,18 @@ class Thermo {
      * xi = ni/nH
      * T: temperature in K
      * dot_xH2_photo = dxH2/dt by photo dissociation of H2 by UV light.
-     * Calculated in RHS in NL99p.
+     * Calculated in RHS in gow17.
      * Return:
-     * Heating rate by H2 UV pumping in erg H^-1 s^-1.
-     * TODO: to be tested with chemistry network, if HeatingH2gr is also
-     * included, can avoid calculate ncr twice. */
+     * Heating rate by H2 UV pumping in erg H^-1 s^-1.*/
     static double HeatingH2pump(const double xHI, const double xH2, const double nH,
                          const double T, const double dot_xH2_photo);
     /* Heating by H2 photo dissiociation.
      * From Black + Dalgarno 1977, 0.4eV per reaction.
      * Arguments:
      * dot_xH2_photo = dxH2/dt by photo dissociation of H2 by UV light.
-     * Calculated in RHS in NL99p.
+     * Calculated in RHS in gow17.
      * Return:
-     * Heating rate by H2 photo dissiociation in erg H^-1 s^-1.
-     * TODO: to be tested with chemistry network. */
+     * Heating rate by H2 photo dissiociation in erg H^-1 s^-1.*/
     static double HeatingH2diss(const double dot_xH2_photo);
 		/* Cooling by C+ fine structure line.
 		 * Collisional species: HI, H2, e.
@@ -186,10 +180,9 @@ class Thermo {
      * reaction heat: 4.48 eV from Krome Paper
      * Arguments:
      * xi = ni/nH
-     * k_H2_H, k_H2_H2: reaction rate cooefficients (k2body_ in NL99p)
+     * k_H2_H, k_H2_H2: reaction rate cooefficients (k2body_ in gow17)
      * Return:
-     * Cooling rate for H2 collisional dissociation in erg H^-1 s^-1.
-     * TODO: testing with Chemistry network.*/
+     * Cooling rate for H2 collisional dissociation in erg H^-1 s^-1.*/
     static double CoolingH2diss(const double xHI, const double xH2,
                          const double k_H2_H, const double k_H2_H2);
     /* Cooling by collisional ionization of HI
@@ -197,10 +190,9 @@ class Thermo {
      * reaction heat: 13.6 eV from Krome Paper
      * Arguments:
      * xi = ni/nH
-     * k_H_e: reaction rate cooefficients (k2body_ in NL99p)
+     * k_H_e: reaction rate cooefficients (k2body_ in gow17)
      * Return:
-     * Cooling rate for collisional ionization of HI in erg H^-1 s^-1.
-     * TODO: testing with Chemistry network.*/
+     * Cooling rate for collisional ionization of HI in erg H^-1 s^-1. */
     static double CoolingHIion(const double xHI, const double xe, const double k_H_e);
     /* specific heat, assume that H2 rotational and vibrational levels not
      * excited.
