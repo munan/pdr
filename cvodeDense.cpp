@@ -25,7 +25,7 @@ CvodeDense::CvodeDense(Ode &ode,
   /* ----------------Intialize solver---------------------*/
   /* Call CVodeCreate to create the solver memory and specify the 
    * Backward Differentiation Formula and the use of a Newton iteration */
-  cvode_mem_ = CVodeCreate(CV_BDF, CV_NEWTON);
+  cvode_mem_ = CVodeCreate(CV_BDF);
   CheckFlag((void *)cvode_mem_, "CVodeCreate", 0);
 
   /* Set the user data pointer to ode*/
