@@ -136,7 +136,7 @@ double Shielding::fShield_C(const double NC, const double NH2) {
   const double AH2 = 1.17e-8;
   const double tau_H2 = 1.2e-14 * 2. * NH2;
   const double y = AH2 * tau_H2;
-  const double ry = exp(-y) * (1. + y);
+  const double ry = exp(-y) / (1. + y);
   const double rc = exp(-1.6e-17*NC);
   return rc * ry;
 }
