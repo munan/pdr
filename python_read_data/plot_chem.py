@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
 
 #reactions for one species formation/destruction
 def GetReaction(reaction_list, spec):
@@ -54,11 +53,6 @@ def Get_xOH_BS15(xi_H, n, x_O, x_e, Z):
     return (xi_2/n/1e-16) * (1 + 0.27*x_O/x_e) / Z
 
 def plot_contour(plotslabs, linestyles=["-", "--", ":"], figname_end="", savefig=True, plot_BS16=False):
-    font = {'family' : 'normal',
-            'weight' : 'normal',
-            'size'   : 20}
-    matplotlib.rc('font', **font)
-    matplotlib.rcParams['lines.linewidth'] = 3.2
     plot_spec_list=["CO2Ctot", "C+2Ctot", "2H2"]
     plot_label=["$x(\mathrm{CO})/x(\mathrm{C_{tot}})$", "$x(\mathrm{C^+})/x(\mathrm{C_{tot}})$", 
                 "$2x(\mathrm{H_2})$"]
@@ -110,11 +104,6 @@ def plot_contour(plotslabs, linestyles=["-", "--", ":"], figname_end="", savefig
 def plot_xi_simple(plot_slabs, linestyles=["-", "--", ":"], figname_end="", savefig=True, plot_nH_arr=[100, 1000], Z=1.,
                    plot_xOH_BS15=False, xi_H_arr=None):
     #plot in results, aboundances, cr rate 2e-16
-    font = {'family' : 'normal',
-            'weight' : 'normal',
-            'size'   : 24}
-    matplotlib.rc('font', **font)
-    matplotlib.rcParams['lines.linewidth'] = 3.2
     fig_dir = "/Users/munangong/chemistry_Athena/draft_chemistry/"
 
     if "TTB" in figname_end:
@@ -175,12 +164,6 @@ def plot_xi_simple(plot_slabs, linestyles=["-", "--", ":"], figname_end="", save
     return
             
 def plot_Ni_simple(plot_slabs, linestyles=["-", "--", ":"], figname_end="", savefig=True, plot_nH_arr=[100, 1000]):           
-    #Ni in results, cr rate 2e-16
-    font = {'family' : 'normal',
-            'weight' : 'normal',
-            'size'   : 24}
-    matplotlib.rc('font', **font)
-    matplotlib.rcParams['lines.linewidth'] = 3.2
     fig_dir = "/Users/munangong/chemistry_Athena/draft_chemistry/"
 
     plot_spec_list=["CO", "C", "C+", "H3+", "OHx", "CHx", "He+"]
@@ -230,11 +213,6 @@ def plot_Ni_simple(plot_slabs, linestyles=["-", "--", ":"], figname_end="", save
             
 #all species in appendix
 def Plot_xi(plot_slabs, plot_nH_arr, Zd, figname_end="", savefig=False, linestyles=["-", "--", ":"]):
-    font = {'family' : 'normal',
-            'weight' : 'normal',
-            'size'   : 18}
-    matplotlib.rc('font', **font)
-    matplotlib.rcParams['lines.linewidth'] = 2.2
     fig_dir = "/Users/munangong/chemistry_Athena/draft_chemistry/"
 
     if "OH" in figname_end:
@@ -340,11 +318,6 @@ def Plot_xi(plot_slabs, plot_nH_arr, Zd, figname_end="", savefig=False, linestyl
 
 #all Ni in appendix
 def Plot_Ni(plot_slabs, plot_nH_arr, Zd, figname_end="", savefig=True):
-    font = {'family' : 'normal',
-            'weight' : 'normal',
-            'size'   : 20}
-    matplotlib.rc('font', **font)
-    matplotlib.rcParams['lines.linewidth'] = 2.2
     linestyles = ["-", "--", ":"]
     fig_dir = "/Users/munangong/chemistry_Athena/draft_chemistry/"
 
