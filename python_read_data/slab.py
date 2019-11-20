@@ -10,16 +10,16 @@ class SlabOut:
             self.spec_list = spec_list
         self.xC = xC
         self.xO = xO
-        print "Set xC={:.2e}, xO={:.2e}.".format(self.xC, self.xO)
+        print("Set xC={:.2e}, xO={:.2e}.".format(self.xC, self.xO))
         self.nH = np.loadtxt(dir_out+"nH_arr.dat")
         self.nslab = len(self.nH)
         slab_arr = []
-        for islab in xrange(self.nslab):
+        for islab in np.arange(self.nslab):
             fn_slab = dir_out + "slab" + ("%06d" % islab) + ".dat"
             slab_arr.append(np.loadtxt(fn_slab))
         slab_arr = np.array(slab_arr)
         self.abd = {}
-        for i in xrange(len(self.spec_list)):
+        for i in np.arange(len(self.spec_list)):
             self.abd[self.spec_list[i]] = np.transpose(slab_arr[:, :, i])
         self.abd["C"] = self.xC - self.abd["CHx"] - self.abd["CO"] - self.abd["C+"] - self.abd["HCO+"]
         self.abd["2H2"] = self.abd["H2"]*2
@@ -44,7 +44,7 @@ class SlabOut:
         if xSi != None:
             self.abd["Si"] = xSi - self.abd["Si+"]
         if "E" in self.spec_list:
-            print "Calculating E assuming CvCold and xHe=0.1 ..."
+            print("Calculating E assuming CvCold and xHe=0.1 ...")
             kb = 1.381e-16
             self.abd["T"] = self.abd["E"] / (1.5 * kb * (self.abd["H2"] + 1. - 2.*self.abd["H2"] + self.abd["e"] + 0.1))
         self.ngrid = slab_arr.shape[1]
@@ -79,11 +79,11 @@ class SlabOut:
         else:
             self.thermo_list = thermo_list
         thermo_arr = []
-        for islab in xrange(self.nslab):
+        for islab in np.arange(self.nslab):
             fn_thermo = self.dir_out + "thermo" + ("%06d" % islab) + ".dat"
             thermo_arr.append(np.loadtxt(fn_thermo))
         thermo_arr = np.array(thermo_arr)
-        for i in xrange(len(self.thermo_list)):
+        for i in np.arange(len(self.thermo_list)):
             self.abd[self.thermo_list[i]] = np.transpose(thermo_arr[:, :, i])
         self.abd["Ltotal"] = np.zeros(self.abd["T"].shape)
         self.abd["Gtotal"] = np.zeros(self.abd["T"].shape)
@@ -93,7 +93,7 @@ class SlabOut:
             elif x[0] == "G":
                 self.abd["Gtotal"] += self.abd[x]
             else:
-                print "ERROR: can't identify process {}".format(x)
+                print("ERROR: can't identify process {}".format(x))
     def ReadRates(self, rates_list=None):
         if rates_list == None:
             self.ratefile = self.dir_out + "chemnet.dat"
@@ -103,13 +103,13 @@ class SlabOut:
         else:
             self.rates_list = rates_list
         rates_arr = []
-        for islab in xrange(self.nslab):
+        for islab in np.arange(self.nslab):
             fn_rates = self.dir_out + "rates" + ("%06d" % islab) + ".dat"
             rates_arr.append(np.loadtxt(fn_rates))
         rates_arr = np.array(rates_arr)
         self.rates = {}
         self.nrates = len(self.rates_list)
-        for i in xrange(self.nrates):
+        for i in np.arange(self.nrates):
             self.rates[i] = np.transpose(rates_arr[:, :, i])
             self.abd[self.rates_list[i]] = np.transpose(rates_arr[:, :, i])         
 

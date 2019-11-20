@@ -1,0 +1,56 @@
+cr  +   H2 ->  H2+,     kcr = 2.00e+00 ksi s-1 H-1
+cr  +  *He ->  He+,     kcr = 1.10e+00 ksi s-1 H-1
+cr  +   *H ->   H+,     kcr = 1.00e+00 ksi s-1 H-1
+cr  +   *C ->   C+,     kcr = 5.60e+02 ksi s-1 H-1
+cr  +   CO ->   *O,     kcr = 9.00e+01 ksi s-1 H-1
+cr  +   CO -> HCO+,     kcr = 6.52e+00 ksi s-1 H-1
+cr  +   *S ->   S+,     kcr = 2.04e+03 ksi s-1 H-1
+cr  +  *Si ->  Si+,     kcr = 8.40e+03 ksi s-1 H-1
+ H3+  +   *C ->  CHx  +   H2,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+ H3+  +   *O ->  OHx  +   H2,     k2body = 2.0e-09 T^-0.19 cm3 s-1 H-1
+ H3+  +   CO -> HCO+  +   H2,     k2body = 1.7e-09 T^0.00 cm3 s-1 H-1
+ He+  +   H2 ->   H+  +  *He,     k2body = 1.3e-13 T^0.00 cm3 s-1 H-1
+ He+  +   CO ->   C+  +   *O,     k2body = 1.6e-09 T^0.00 cm3 s-1 H-1
+  C+  +   H2 ->  CHx  +   *H,     k2body = 2.3e-13 T^-1.30 cm3 s-1 H-1
+  C+  +  OHx -> HCO+  +   *H,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+ CHx  +   *O ->   CO  +   *H,     k2body = 7.0e-11 T^0.00 cm3 s-1 H-1
+ OHx  +   *C ->   CO  +   *H,     k2body = 8.0e-10 T^-0.34 cm3 s-1 H-1
+ He+  +   *e ->  *He  +   *H,     k2body = 1.0e-11 T^-0.50 cm3 s-1 H-1
+ H3+  +   *e ->   H2  +   *H,     k2body = 4.5e-07 T^-0.52 cm3 s-1 H-1
+  C+  +   *e ->   *C  +   *H,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+HCO+  +   *e ->   CO  +   *H,     k2body = 1.1e-05 T^-0.64 cm3 s-1 H-1
+ H2+  +   H2 ->  H3+  +   *H,     k2body = 1.8e-09 T^0.04 cm3 s-1 H-1
+  H+  +   *e ->   *H  +   *H,     k2body = 2.8e-14 T^0.00 cm3 s-1 H-1
+  H2  +   *H ->   *H  +   *H,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+  H2  +   H2 ->   H2  +   *H,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+  *H  +   *e ->   H+  +   *e,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+ H3+  +   *e ->   *H  +   *H,     k2body = 8.5e-07 T^-0.52 cm3 s-1 H-1
+ He+  +   H2 ->  H2+  +  *He,     k2body = 7.2e-15 T^0.00 cm3 s-1 H-1
+ CHx  +   *H ->   H2  +   *C,     k2body = 2.8e-11 T^0.26 cm3 s-1 H-1
+ OHx  +   *O ->   *O  +   *H,     k2body = 3.5e-11 T^0.00 cm3 s-1 H-1
+  C+  +   H2 ->   *C  +   *H,     k2body = 9.9e-14 T^-1.30 cm3 s-1 H-1
+  S+  +   *e ->   *S  +   *H,     k2body = 1.6e-10 T^-0.59 cm3 s-1 H-1
+  C+  +   *S ->   S+  +   *C,     k2body = 5.0e-11 T^0.00 cm3 s-1 H-1
+ Si+  +   *e ->  *Si  +   *H,     k2body = 1.5e-10 T^-0.62 cm3 s-1 H-1
+  C+  +  *Si ->  Si+  +   *C,     k2body = 2.1e-09 T^0.00 cm3 s-1 H-1
+ H3+  +   *O ->   H2  +   *O,     k2body = 2.0e-09 T^-0.19 cm3 s-1 H-1
+ He+  +  OHx ->   O+  +  *He,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+ H2+  +   *H ->   H+  +   H2,     k2body = 6.4e-10 T^0.00 cm3 s-1 H-1
+  H+  +   *O ->   O+  +   *H,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+  O+  +   *H ->   H+  +   *O,     k2body = 1.0e+00 T^0.00 cm3 s-1 H-1
+  O+  +   H2 ->  OHx  +   *H,     k2body = 1.6e-09 T^0.00 cm3 s-1 H-1
+  O+  +   H2 ->   *O  +   *H,     k2body = 1.6e-09 T^0.00 cm3 s-1 H-1
+  C+  +   H2 ->  CHx  +   *H,     k2body = 3.8e-14 T^0.00 cm3 s-1 H-1
+h nu  +   *C ->   C+,     kph = 3.5e-10 G0 exp(-3.8 Av) s-1 H-1
+h nu  +  CHx ->   *C,     kph = 9.1e-10 G0 exp(-2.1 Av) s-1 H-1
+h nu  +   CO ->   *C,     kph = 2.4e-10 G0 exp(-3.9 Av) s-1 H-1
+h nu  +  OHx ->   *O,     kph = 3.8e-10 G0 exp(-2.7 Av) s-1 H-1
+h nu  +   H2 ->   *H,     kph = 5.7e-11 G0 exp(-4.2 Av) s-1 H-1
+h nu  +   *S ->   S+,     kph = 6.0e-10 G0 exp(-3.1 Av) s-1 H-1
+h nu  +  *Si ->  Si+,     kph = 4.5e-09 G0 exp(-2.6 Av) s-1 H-1
+gr  +   *H ->   H2 
+gr  +   H+ ->   *H 
+gr  +   C+ ->   *C 
+gr  +  He+ ->  *He 
+gr  +   S+ ->   *S 
+gr  +  Si+ ->  *Si 

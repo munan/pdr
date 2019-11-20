@@ -31,11 +31,11 @@ nprob = len(fprob)
 #(2) rewrite makefile
 #(3) call make to compile
 #(4) run in background
-for i in xrange(nprob):
+for i in range(nprob):
     #(1) mkdir/cleanup output directory
     if os.path.isdir(dout_prob[i]):
         command_clean = "rm {}/*".format(dout_prob[i])
-        print command_clean
+        print(command_clean)
         proc1 = subprocess.Popen(command_clean, shell=True).wait()
         #pid1, sts1 = os.waitpid(proc1.pid, 0)
     else:
@@ -61,7 +61,7 @@ for i in xrange(nprob):
 
     #(4) run in background
     run_command = "./{}".format(exe[i])
-    print run_command
+    print(run_command)
     proc4 = subprocess.Popen(run_command)
     proc4.wait()
     #pid4, sts4 = os.waitpid(proc4.pid, 0)

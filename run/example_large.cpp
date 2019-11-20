@@ -48,7 +48,7 @@ int main() {
   //radiation field: 0: beamed/plane-parallel,
   //1: Isotropic approximation/plane-parallel with 60 degrees incident angle
   //2: Isotropic
-  const int field_geo = 1; 
+  const int field_geo = 0; 
 
   //set up densities of a series of PDR
 	const double nH_first = 10;
