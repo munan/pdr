@@ -73,9 +73,9 @@ class SlabOut:
             return self.abd[spec][indx_NH, indx_nH]
     def ReadThermo(self, thermo_list=None):
         if thermo_list == None:
-            self.thermo_list = ["LCR" , "LPE" , "LH2gr" , "LH2pump" , "LH2diss",
-                                "GCII" , "GCI" , "GOI" , "GLya" , "GCOR",
-                                "GH2" , "GDust" , "GRec" , "GH2diss" , "GHIion"]
+            self.thermo_list = ["GCR" , "GPE" , "GH2gr" , "GH2pump" , "GH2diss",
+                                "LCII" , "LCI" , "LOI" , "LLya" , "LCOR",
+                                "LH2" , "LDust" , "LRec" , "LH2diss" , "LHIion"]
         else:
             self.thermo_list = thermo_list
         thermo_arr = []

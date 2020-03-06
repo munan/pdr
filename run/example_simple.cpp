@@ -129,7 +129,7 @@ int main() {
 		FILE *pf_rates = fopen(file_rates, "w+");
 		//G0 = nH / nH2G0;
     //odegow17.SetIonRate(2e-16 * sqrt(G0));
-    G0 = 1.; //incident radiation field strength
+    G0 = 2.; //incident radiation field strength
 		odegow17.SetInit(t0, y0);
 		odegow17.SetnH(nH);
 		Slab *myslab = new Slab(odegow17, cvodeDense, ngrid, NH_total, G0, Zdg,

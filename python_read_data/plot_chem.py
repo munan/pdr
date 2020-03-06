@@ -542,3 +542,57 @@ def plot_rates_NH(slab, NH, rate_spec, abd_spec=None, fig_size_factor=1.):
     ax.set_title(rate_spec+" reactions, NH={:.1e}\n".format(NH), fontsize=10)
     return ax
 
+def plot_thermo_nH(ax, plot_slab, plot_nH,linestyle="-", label="", plot_unimportant = False, plot_legend=True):
+    #important heating processes:
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("GPE", nH=plot_nH), color="orange", linestyle=linestyle, label="GPE, "+label)
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("GCR", nH=plot_nH), color="m", linestyle=linestyle, label="GCR")
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("Gtotal", nH=plot_nH), color="r", linestyle=linestyle, label="Gtotal", 
+            linewidth=4)
+    #important cooling processes:
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("LLya", nH=plot_nH), color="g",linestyle=linestyle, label="LLya")
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("LRec", nH=plot_nH), color="navy", linestyle=linestyle, label="LRec")
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("LOI", nH=plot_nH), color="lightblue", linestyle=linestyle, label="LOI")  
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("LCII", nH=plot_nH), color="cyan", linestyle=linestyle, label="LCII")
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("LCI", nH=plot_nH), color="olive", linestyle=linestyle, label="LCI")
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("LCOR", nH=plot_nH), color="lawngreen", linestyle=linestyle, label="LCOR")
+    ax.plot(plot_slab.NH, plot_slab.GetAbd("Ltotal", nH=plot_nH), color="b", linestyle=linestyle, label="Ltotal", 
+            linewidth=2.5)
+    #unimportant processes:
+    if plot_unimportant:
+        ax.plot(plot_slab.NH, plot_slab.GetAbd("GH2diss", nH=plot_nH), color="y", linestyle="-", label="GH2diss")
+        ax.plot(plot_slab.NH, plot_slab.GetAbd("GH2pump", nH=plot_nH), color="chocolate", linestyle="-", label="GH2pump")
+        ax.plot(plot_slab.NH, plot_slab.GetAbd("GH2gr", nH=plot_nH), color="pink", linestyle="-", label="GH2gr")
+        ax.plot(plot_slab.NH, plot_slab.GetAbd("LH2", nH=plot_nH), color="yellowgreen", linestyle="-", label="LH2")
+        ax.plot(plot_slab.NH, plot_slab.GetAbd("LDust", nH=plot_nH), color="skyblue", linestyle="-", label="LDust")
+        ax.plot(plot_slab.NH, plot_slab.GetAbd("LH2diss", nH=plot_nH), color="turquoise", linestyle="-", label="LH2diss")
+        ax.plot(plot_slab.NH, plot_slab.GetAbd("LHIion", nH=plot_nH), color="indigo", linestyle="-", label="LHIion")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_ylim([1e-30, 1e-23])
+    ax.set_xlim([plot_slab.NH[0], plot_slab.NH[-1]])
+    ax2 = ax.twinx()
+    ax2.plot(plot_slab.NH, plot_slab.GetAbd("T", nH=plot_nH)/100, color="k",
+            linestyle=linestyle, label="T/100", linewidth=4)
+    ax2.plot(plot_slab.NH, plot_slab.GetAbd("e", nH=plot_nH), color="k", linestyle=linestyle, label="e",
+            linewidth=2)
+    ax2.plot(plot_slab.NH, plot_slab.GetAbd("H", nH=plot_nH), color="silver", linestyle=linestyle, label="H", 
+            linewidth=3)
+    ax2.plot(plot_slab.NH, plot_slab.GetAbd("H2", nH=plot_nH)*2, color="brown", linestyle=linestyle, label="2H2", 
+            linewidth=1.5)
+    ax2.plot(plot_slab.NH, plot_slab.GetAbd("C2Ctot", nH=plot_nH), color="gray", linestyle=linestyle,
+            label="C/Ctot",linewidth=2)
+    ax2.plot(plot_slab.NH, plot_slab.GetAbd("CO2Ctot", nH=plot_nH), color="brown", linestyle=linestyle,
+            label="CO/Ctot", linewidth=3)
+   
+    ax2.set_yscale("log")
+    ax2.set_xscale("log")
+    ax2.set_ylim([1e-4, 2])
+    ax2.set_xlim([plot_slab.NH[0], plot_slab.NH[-1]])
+    if plot_legend:
+        ax.legend(fontsize=10, loc=3)
+        ax2.legend(fontsize=10, loc=2)
+    ax.set_xlabel("$N_H/cm^{-2}$")
+    ax2.set_ylabel("$T2, 2x_{H_2}, x_{CO}/x_{Ctot}, x_{C^+}/x_{Ctot}$")
+    ax.set_ylabel("$\Lambda(\Gamma) / \mathrm{erg^{}s^{-1}H^{-1}}$")
+    ax.set_title("Heating and cooling, nH={:.1f}".format(plot_nH), fontsize=10)
+    return
