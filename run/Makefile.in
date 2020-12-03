@@ -2,7 +2,7 @@ SHELL = /bin/sh
 
 exec_prefix  = $(cvode_dir)
 includedir   = $(cvode_dir)/include
-libdir       = $(exec_prefix)/lib
+libdir       = $(exec_prefix)/lib64
 sourcedir    = $(shell dirname $$PWD)/
 
 CPP      = g++
