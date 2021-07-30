@@ -1,0 +1,14 @@
+*.exe
+out*
+*Makefile
+*.swp
+*.o
+*.pyc
+*.ipynb_checkpoints
+*.aux
+*.bbl
+*.blg
+*.log
+*.pdf
+*Notes.bib
+*.DS_Store
