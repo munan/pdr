@@ -27,7 +27,7 @@ class gow17 : public Ode {
 		/* Map spec_list members to integer index*/
 		typedef std::map<std::string, int> SpecMap;
 
-    gow17(); 
+    gow17();
     ~gow17();
     int Dimen() const {return kDimen;}
     /*return the number of heating and cooling processes*/
@@ -38,7 +38,7 @@ class gow17 : public Ode {
                    N_Vector ydot);
     /*Jacobian*/
     int Jac(const realtype t,
-            const N_Vector y, const N_Vector fy, 
+            const N_Vector y, const N_Vector fy,
             SUNMatrix J, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 		/* Map of species name to index*/
@@ -109,7 +109,8 @@ class gow17 : public Ode {
     void SetfHeplusgr(double fHeplusgr);
     void SetfCplusCR(double fCplusCR); /* set scale for CR ionization of CI*/
     void IsH2dissHeating(const bool isH2diss_heating);
-    void IsH2rvCooling(const bool isH2rv_Cooling);
+    void IsH2rvCooling(const bool isH2rv_cooling);
+    void IsDustCooling(const bool isDust_cooling);
     void IsH2grHeating(const bool isH2gr_heating);
 
 		/*copy y_ to array*/
@@ -117,7 +118,7 @@ class gow17 : public Ode {
     void CopyThermoRates(double *y) const;
 
   private:
-    static const int kDimen = 14; 
+    static const int kDimen = 14;
 		/*number of ghost species: the abundances of which are calculated from
 		 * other species or a fixed value.*/
 		static const int n_ghost_ = 7;
@@ -149,7 +150,7 @@ class gow17 : public Ode {
 		/*column denstiy of CO, in cm^-2*/
 		double NCO_;
 		double NH_;
-		/*dx_cell_: when not equal to zero, take into the column density of 
+		/*dx_cell_: when not equal to zero, take into the column density of
 		 * dx_cell_/2 * nH * xCO(xH2) into account when calculating
 		 * self-sheilding*/
 		double dx_cell_;
@@ -162,7 +163,7 @@ class gow17 : public Ode {
     bool isbCO_L_;
     /*Set whether to use optically thin CO cooling (NCOeff = 0) */
     bool isCoolingCOThin_;
-		
+
 		/*----------------------Chemical reactions----------------------------*/
 		/*store index for useful species*/
 		const int iCO_;
@@ -186,24 +187,24 @@ class gow17 : public Ode {
 		const int iSi_;
 		const int iSiplus_;
     const int iE_; /* internal energy index */
-		
+
 		/*initialize chemistry reations.
      *Arguments:
      *y: array of species and internal energy.*/
 		void ChemInit_(const double *y);
     /* Caculate change of internal energy for all heating and cooling processes.
      * Processes included are listed below.
-     * Heating (5): 
+     * Heating (5):
      *  - LCR: cosmic ray ionization of H, He, and H2
      *  - LPE: photo electric effect on dust
      *  - LH2gr: H2 formation on dust grains
      *  - LH2pump: H2 UV pumping
      *  - LH2diss: H2 photo dissiociation
-     * Cooling (10): 
+     * Cooling (10):
      *  - GCII: C+ fine structure line
      *  - GCI: CI fine structure line
      *  - GOI: OI fine structure line
-     *  - GLya: collisional exicited lyman alphya line 
+     *  - GLya: collisional exicited lyman alphya line
      *  - GCOR: CO rotational lines
      *  - GH2: H2 vibration and rotation lines
      *  - GDust: dust thermo emission
@@ -229,7 +230,7 @@ class gow17 : public Ode {
 		static const int outcr_[n_cr_]; /*product*/
 		static const double kcr_base_[n_cr_]; /*coefficents of rates relative to H*/
 		/*rates of reactions, updated by ChemInit() the physical parameters*/
-		double kcr_[n_cr_]; 
+		double kcr_[n_cr_];
 		/*2 body reactions*/
 		static const int n_2body_ = 35;
     static const int i2body_H2_H;
@@ -273,11 +274,11 @@ class gow17 : public Ode {
 		static const int outgr_[n_gr_];
 		/*constants for H+, C+, He+ grain recombination.
      * See Draine ISM book table 14.9 page 158, or Weingartner+Draine2001.*/
-		static const double cHp_[7]; 
-		static const double cCp_[7]; 
-		static const double cHep_[7]; 
-		static const double cSp_[7]; 
-		static const double cSip_[7]; 
+		static const double cHp_[7];
+		static const double cCp_[7];
+		static const double cHep_[7];
+		static const double cSp_[7];
+		static const double cSip_[7];
 		/*factor to calculate psi in H+ recombination on grain*/
 		double psi_gr_fac_;
 		double kgr_[n_gr_];
@@ -320,6 +321,7 @@ class gow17 : public Ode {
     bool isH2diss_heating_;
     bool isH2gr_heating_;
     bool isH2rv_cooling_;
+    bool isDust_cooling_;
 
 };
 

@@ -5,11 +5,11 @@
 
 /*------------Initialize static members of the class --------*/
 /*species list and map*/
-const std::string gow17::spec_list_[kDimen+n_ghost_] = 
+const std::string gow17::spec_list_[kDimen+n_ghost_] =
 		{"He+", "OHx", "CHx", "CO", "C+", "HCO+", "H2", "H+", "H3+",
 		/*below are ghost species. The aboundances of ghost species are
 		 * recalculated in RHS everytime by other species. */
-		  "H2+", "S+", "Si+", "O+", "E", "*Si", "*S", "*C", "*O", "*He", "*e", "*H"}; 
+		  "H2+", "S+", "Si+", "O+", "E", "*Si", "*S", "*C", "*O", "*He", "*e", "*H"};
 
 const gow17::SpecMap gow17::spec_index_map = InitMap_();
 
@@ -22,11 +22,11 @@ gow17::SpecMap gow17::InitMap_() {
 }
 
 /*network specific constants*/
-const double gow17::xHe_ = 0.1; 
+const double gow17::xHe_ = 0.1;
 const double gow17::xC_std_ = 1.6e-4;
-const double gow17::xO_std_ = 3.2e-4; 
-const double gow17::xS_std_ = 3.5e-6; 
-const double gow17::xSi_std_ = 1.7e-6; 
+const double gow17::xO_std_ = 3.2e-4;
+const double gow17::xS_std_ = 3.5e-6;
+const double gow17::xSi_std_ = 1.7e-6;
 const double gow17::temp_coll_ = 7.0e2;
 const double gow17::mH_ = 1.67e-24;
 const double gow17::mCO_ = 4.68e-23;
@@ -34,11 +34,11 @@ const double gow17::mCO_ = 4.68e-23;
 /*chemical network*/
 /*cosmic ray chemistry network*/
 /* (0) cr + H2 -> H2+ + *e
- * (1) cr + *He -> He+ + *e 
- * (2) cr + *H  -> H+ + *e 
- * -----added as Clark + Glover 2015---- 
- * (3) cr + *C -> C+ + *e     --including direct and cr induce photo reactions 
- * (4) crphoto + CO -> *O + *C       
+ * (1) cr + *He -> He+ + *e
+ * (2) cr + *H  -> H+ + *e
+ * -----added as Clark + Glover 2015----
+ * (3) cr + *C -> C+ + *e     --including direct and cr induce photo reactions
+ * (4) crphoto + CO -> *O + *C
  * (5) cr + CO -> HCO+ + e  --schematic for cr + CO -> CO+ + e
  * -----S, CR induced photo ionization, experimenting----
  * (6) cr + S -> S+ + e, simply use 2 times rate of C, as in UMIST12
@@ -48,16 +48,16 @@ const double gow17::mCO_ = 4.68e-23;
 const int gow17::icr_H2_ = 0;
 const int gow17::icr_He_ = 1;
 const int gow17::icr_H_ = 2;
-const int gow17::incr_[n_cr_] = {id("H2"), id("*He"), id("*H"), 
+const int gow17::incr_[n_cr_] = {id("H2"), id("*He"), id("*H"),
                                  id("*C"), id("CO"), id("CO"),
                                  id("*S"), id("*Si")};
-const int gow17::outcr_[n_cr_] = {id("H2+"), id("He+"), id("H+"), 
+const int gow17::outcr_[n_cr_] = {id("H2+"), id("He+"), id("H+"),
                                   id("C+"), id("*O"), id("HCO+"),
                                   id("S+"), id("Si+")};
-const double gow17::kcr_base_[n_cr_] = 
-{2.0, 1.1, 1.0, 
+const double gow17::kcr_base_[n_cr_] =
+{2.0, 1.1, 1.0,
 560., 90., 6.52,
-2040., 8400.}; 
+2040., 8400.};
 
 
 /*2 body reactions*/
@@ -65,10 +65,10 @@ const double gow17::kcr_base_[n_cr_] =
 /* Reactions are, in order.
  * -- are equations of special rate treatment in Glover, Federrath+ 2010:
  (0) H3+ + *C -> CH + H2         --Vissapragada2016 new rates
- (1) H3+ + *O -> OH + H2        
+ (1) H3+ + *O -> OH + H2
  (2) H3+ + CO -> HCO+ + H2
  (3) He+ + H2 -> H+ + *He + *H   --fit to Schauer1989
- (4) He+ + CO -> C+ + *O + *He   
+ (4) He+ + CO -> C+ + *O + *He
  (5) C+ + H2 -> CH + *H         -- schematic reaction for C+ + H2 -> CH2+
  (6) C+ + OH -> HCO+             -- Schematic equation for C+ + OH -> CO+ + H.
  Use rates in KIDA website.
@@ -90,7 +90,7 @@ const double gow17::kcr_base_[n_cr_] =
  ----added He+ destruction in addtion to (3), from UMIST12----
  (19) He+ + H2 -> H2+ + *He
  ----added CH reaction to match for abundances of CH---
- (20) CH + *H -> H2 + *C         
+ (20) CH + *H -> H2 + *C
  ----added to match the Meudon code ---
  (21) OH + *O -> *O + *O + *H
  ---branching of C+ + H2 ------
@@ -104,9 +104,9 @@ const double gow17::kcr_base_[n_cr_] =
  --- H2O+ + e reaction ---
  (27) H3+ + *O + *e -> H2 + *O + *H
  --- OH destruction with He+
- (28) He+ + OH -> O+ + *He + *H 
+ (28) He+ + OH -> O+ + *He + *H
  --- H2+ charge exchange with H ---
- (29) H2+ + *H -> H+ + H2 
+ (29) H2+ + *H -> H+ + H2
  --- O+ reactions ---
  (30) H+ + *O -> O+ + *H -- fitting in Stancil et al. 1999, exp(-227/T)
  (31) O+ + *H -> H+ + *O -- fitting in Stancil et al. 1999
@@ -118,59 +118,59 @@ const double gow17::kcr_base_[n_cr_] =
 const int gow17::i2body_H2_H = 15;
 const int gow17::i2body_H2_H2 = 16;
 const int gow17::i2body_H_e = 17;
-const int gow17::in2body1_[n_2body_] = 
-          {id("H3+"), id("H3+"), id("H3+"), id("He+"), id("He+"),    
+const int gow17::in2body1_[n_2body_] =
+          {id("H3+"), id("H3+"), id("H3+"), id("He+"), id("He+"),
            id("C+"), id("C+"), id("CHx"), id("OHx"), id("He+"),
            id("H3+"), id("C+"), id("HCO+"),
 					 id("H2+"), id("H+"), id("H2"), id("H2"), id("*H"),
-					 id("H3+"), id("He+"), 
+					 id("H3+"), id("He+"),
            id("CHx"), id("OHx"), id("C+"), id("S+"), id("C+"),
            id("Si+"), id("C+"), id("H3+"), id("He+"), id("H2+"),
            id("H+"), id("O+"), id("O+"), id("O+"), id("C+")};
-const int gow17::in2body2_[n_2body_] = 
-          {id("*C"), id("*O"), id("CO"), id("H2"), id("CO"),   
-           id("H2"), id("OHx"), id("*O"), id("*C"), id("*e"),   
+const int gow17::in2body2_[n_2body_] =
+          {id("*C"), id("*O"), id("CO"), id("H2"), id("CO"),
+           id("H2"), id("OHx"), id("*O"), id("*C"), id("*e"),
            id("*e"), id("*e"), id("*e"),
 					 id("H2"), id("*e"), id("*H"), id("H2"), id("*e"),
-					 id("*e"), id("H2"), 
+					 id("*e"), id("H2"),
            id("*H"), id("*O"), id("H2"), id("*e"), id("*S"),
            id("*e"), id("*Si"), id("*O"), id("OHx"), id("*H"),
            id("*O"), id("*H"), id("H2"), id("H2"), id("H2")};
 /*Note: output to ghost species doesn't matter. The abundances of ghost species
  * are updated using the other species at every timestep*/
-const int gow17::out2body1_[n_2body_] = 
-          {id("CHx"), id("OHx"), id("HCO+"), id("H+"), id("C+"),   
-           id("CHx"), id("HCO+"), id("CO"), id("CO"), id("*He"),   
+const int gow17::out2body1_[n_2body_] =
+          {id("CHx"), id("OHx"), id("HCO+"), id("H+"), id("C+"),
+           id("CHx"), id("HCO+"), id("CO"), id("CO"), id("*He"),
            id("H2"), id("*C"), id("CO"),
 					 id("H3+"), id("*H"), id("*H"), id("H2"), id("H+"),
-					 id("*H"), id("H2+"), 
+					 id("*H"), id("H2+"),
            id("H2"), id("*O"), id("*C"), id("*S"), id("S+"),
            id("*Si"), id("Si+"), id("H2"), id("O+"), id("H+"),
            id("O+"), id("H+"), id("OHx"), id("*O"), id("CHx")};
-const int gow17::out2body2_[n_2body_] = 
-          {id("H2"), id("H2"), id("H2"), id("*He"), id("*O"),   
-           id("*H"), id("*H"), id("*H"), id("*H"), id("*H"),   
+const int gow17::out2body2_[n_2body_] =
+          {id("H2"), id("H2"), id("H2"), id("*He"), id("*O"),
+           id("*H"), id("*H"), id("*H"), id("*H"), id("*H"),
            id("*H"), id("*H"), id("*H"),
 					 id("*H"), id("*H"), id("*H"), id("*H"), id("*e"),
-					 id("*H"), id("*He"), 
+					 id("*H"), id("*He"),
            id("*C"), id("*H"), id("*H"), id("*H"), id("*C"),
            id("*H"), id("*C"), id("*O"), id("*He"), id("H2"),
            id("*H"), id("*O"), id("*H"), id("*H"), id("*H")};
-const double gow17::k2Texp_[n_2body_] = 
- {0.0, -0.190, 0.0, 0.0, 0.0, 
-  -1.3, 0.0, 0.0, -0.339, -0.5, 
+const double gow17::k2Texp_[n_2body_] =
+ {0.0, -0.190, 0.0, 0.0, 0.0,
+  -1.3, 0.0, 0.0, -0.339, -0.5,
   -0.52, 0.0, -0.64,
   0.042, 0.0, 0.0, 0.0, 0.0,
   -0.52, 0.0,
   0.26, 0.0, -1.3, -0.59, 0.0,
   -0.62, 0.0, -0.190, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0};
-const double gow17::k2body_base_[n_2body_] = 
-                {1.00, 1.99e-9, 1.7e-9, 1.26e-13, 1.6e-9, 
-                 3.3e-13 * 0.7, 1.00, 7.0e-11, 7.95e-10, 1.0e-11, 
+const double gow17::k2body_base_[n_2body_] =
+                {1.00, 1.99e-9, 1.7e-9, 1.26e-13, 1.6e-9,
+                 3.3e-13 * 0.7, 1.00, 7.0e-11, 7.95e-10, 1.0e-11,
                  4.54e-7, 1.00, 1.06e-5,
 								 1.76e-9, 2.753e-14, 1.00, 1.00, 1.00,
-								 8.46e-7, 7.20e-15, 
+								 8.46e-7, 7.20e-15,
                  2.81e-11, 3.5e-11, 3.3e-13 * 0.3, 1.6e-10, 5e-11,
                  1.46e-10, 2.1e-9, 1.99e-9, 1.00, 6.4e-10,
                  1.00, 1.00, 1.6e-9, 1.6e-9, 3.8e-14};
@@ -203,10 +203,10 @@ const int gow17::inph_[n_ph_] = {
 const int gow17::outph1_[n_ph_] = {
               id("C+"), id("*C"), id("*C"),
               id("*O"), id("*H"), id("S+"), id("Si+")};
-const double gow17::kph_base_[n_ph_] = {3.5e-10, 9.1e-10, 2.4e-10,   
-																			  3.8e-10, 5.7e-11, 
-                                        6e-10, 4.5e-9}; 
-const double gow17::kph_avfac_[n_ph_] = {3.76, 2.12, 3.88,  
+const double gow17::kph_base_[n_ph_] = {3.5e-10, 9.1e-10, 2.4e-10,
+																			  3.8e-10, 5.7e-11,
+                                        6e-10, 4.5e-9};
+const double gow17::kph_avfac_[n_ph_] = {3.76, 2.12, 3.88,
 	                                       2.66, 4.18,
                                          3.10, 2.61};
 
@@ -221,12 +221,12 @@ const double gow17::kph_avfac_[n_ph_] = {3.76, 2.12, 3.88,
  (5) Si+ + *e + gr -> *Si + gr
  */
 const int gow17::igr_H_ = 0;
-const int gow17::ingr_[n_gr_] = {id("*H"), id("H+"), id("C+"), id("He+"), 
+const int gow17::ingr_[n_gr_] = {id("*H"), id("H+"), id("C+"), id("He+"),
                                  id("S+"), id("Si+")};
-const int gow17::outgr_[n_gr_] = {id("H2"), id("*H"), id("*C"), id("*He"), 
+const int gow17::outgr_[n_gr_] = {id("H2"), id("*H"), id("*C"), id("*He"),
                                  id("*S"), id("*Si")};
 const double gow17::cHp_[7] = {12.25, 8.074e-6, 1.378, 5.087e2, 1.586e-2,
-															 0.4723, 1.102e-5}; 
+															 0.4723, 1.102e-5};
 const double gow17::cCp_[7] = {45.58, 6.089e-3, 1.128, 4.331e2, 4.845e-2,
                                0.8120, 1.333e-4};
 const double gow17::cHep_[7] = {5.572, 3.185e-7, 1.512, 5.115e3, 3.903e-7,
@@ -264,6 +264,7 @@ gow17::gow17()
    isH2diss_heating_(true),
    isH2gr_heating_(true),
    isH2rv_cooling_(true),
+   isDust_cooling_(false),
    temp_(0.),
    LCR_(0.),
    LPE_(0.),
@@ -318,8 +319,8 @@ gow17::gow17()
 
 gow17::~gow17() {
   /* destroy serial vector y*/
-  N_VDestroy_Serial(y_); 
-} 
+  N_VDestroy_Serial(y_);
+}
 
 /*-------------------------RHS and Jac-----------------------------*/
 
@@ -382,7 +383,7 @@ int gow17::RHS(const realtype t, const N_Vector y, N_Vector ydot)
 }
 
 int gow17::Jac(const realtype t,
-               const N_Vector y, const N_Vector fy, 
+               const N_Vector y, const N_Vector fy,
                SUNMatrix J, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3) {
 	double rate_pa = 0; /* rate for partial derivative respect to species a*/
 	double rate_pb = 0;
@@ -472,22 +473,22 @@ void gow17::PrintSpecMap() const {
 /*--------------------Chemistry reactions-----------------------*/
 void gow17::PrintChemNet(FILE *pf) const {
 	for (int i=0; i<n_cr_; i++) {
-		fprintf(pf, "cr  + %4s -> %4s,     kcr = %.2e ksi s-1 H-1\n", 
+		fprintf(pf, "cr  + %4s -> %4s,     kcr = %.2e ksi s-1 H-1\n",
 		 spec_list_[incr_[i]].c_str(), spec_list_[outcr_[i]].c_str(), kcr_base_[i]);
 	}
 	for (int i=0; i<n_2body_; i++) {
-		fprintf(pf, "%4s  + %4s -> %4s  + %4s,     k2body = %.1e T^%.2f cm3 s-1 H-1\n", 
+		fprintf(pf, "%4s  + %4s -> %4s  + %4s,     k2body = %.1e T^%.2f cm3 s-1 H-1\n",
 		 spec_list_[in2body1_[i]].c_str(), spec_list_[in2body2_[i]].c_str(),
 		 spec_list_[out2body1_[i]].c_str(), spec_list_[out2body2_[i]].c_str(),
 		 k2body_base_[i], k2Texp_[i]);
 	}
 	for (int i=0; i<n_ph_; i++) {
-		fprintf(pf, "h nu  + %4s -> %4s,     kph = %.1e G0 exp(-%.1f Av) s-1 H-1\n", 
+		fprintf(pf, "h nu  + %4s -> %4s,     kph = %.1e G0 exp(-%.1f Av) s-1 H-1\n",
 		 spec_list_[inph_[i]].c_str(), spec_list_[outph1_[i]].c_str(),
 		 kph_base_[i], kph_avfac_[i]);
 	}
 	for (int i=0; i<n_gr_; i++) {
-		fprintf(pf, "gr  + %4s -> %4s \n", 
+		fprintf(pf, "gr  + %4s -> %4s \n",
 		 spec_list_[ingr_[i]].c_str(), spec_list_[outgr_[i]].c_str());
 	}
 }
@@ -513,12 +514,12 @@ void gow17::ChemInit_(const double *y) {
 		kcr_[i] = kcr_base_[i] * ion_rate_;
 	}
   /*cosmic ray induced photo-reactions, proportional to x(H2)*/
-  /*(3) cr + *C -> C+ + *e     --including direct and cr induce photo reactions 
-   *(4) crphoto + CO -> *O + *C 
+  /*(3) cr + *C -> C+ + *e     --including direct and cr induce photo reactions
+   *(4) crphoto + CO -> *O + *C
    *(6) cr + S -> S+ + e, simply use 2 times rate of C, as in UMIST12
    *(7) cr + Si -> Si+ + e, UMIST12 */
  /* (0) cr + H2 -> H2+ + *e
- * (1) cr + *He -> He+ + *e 
+ * (1) cr + *He -> He+ + *e
  * (2) cr + *H  -> H+ + *e */
   kcr_H_fac = 1.15 * 2*y[iH2_] + 1.5 * y[iH_];
   kcr_[0] *= kcr_H_fac;
@@ -558,15 +559,15 @@ void gow17::ChemInit_(const double *y) {
   /* (13) H2+ + H2 -> H3+ + *H       --(54) exp(-T/46600) */
   k2body_[13] *= exp(- T/46600.);
 	/* (14) H+ + *e -> *H              --(12) Case B */
-	k2body_[14] *= pow( 315614.0 / T, 1.5) 
+	k2body_[14] *= pow( 315614.0 / T, 1.5)
 									 * pow(  1.0 + pow( 115188.0 / T, 0.407) , -2.242 );
   //k2body_[14] = 3.5e-12 * pow( 300./T, 0.75 ) * nH_;
   /* (28) He+ + OH -> *H + *He + *O(O+)*/
   k2body_[28] = 1.35e-9 *( 0.62 + 0.4767 * 5.5 * sqrt(300./T) ) * nH_;
   /*--- H2O+ + e branching--
-  (1) H3+ + *O -> OH + H2        
+  (1) H3+ + *O -> OH + H2
   (27) H3+ + *O + *e -> H2 + *O + *H     */
-  const double h2oplus_ratio = 
+  const double h2oplus_ratio =
                 6e-10 * y[iH2_] / ( 5.3e-6 / sqrt(T) * y[ie_] );
   const double fac_H2Oplus_H2 = h2oplus_ratio / (h2oplus_ratio + 1.);
   const double fac_H2Oplus_e = 1. / (h2oplus_ratio + 1.);
@@ -574,7 +575,7 @@ void gow17::ChemInit_(const double *y) {
   k2body_[27] *= fac_H2Oplus_e;
   /*--- O+ reactions ---
     (30) H+ + *O -> O+ + *H -- exp(-227/T)
-    (31) O+ + *H -> H+ + *O 
+    (31) O+ + *H -> H+ + *O
     (32) O+ + H2 -> OH + *H     -- branching of H2O+
     (33) O+ + H2 -> *O + *H + *H  -- branching of H2O+ */
   k2body_[30] *= ( 1.1e-11 * pow(T, 0.517) + 4.0e-10 * pow(T, 6.69e-3) )*exp(-227./T);
@@ -586,25 +587,25 @@ void gow17::ChemInit_(const double *y) {
 
   /*Collisional dissociation, k>~1.0e-30 at T>~5e2.*/
   if (T > temp_coll_) {
-    /*(15) H2 + *H -> 3 *H   
+    /*(15) H2 + *H -> 3 *H
      *(16) H2 + H2 -> H2 + 2 *H
      * --(9) Density dependent. See Glover+MacLow2007*/
-  	k9l_ = 6.67e-12 * sqrt(T) * exp(-(1. + 63590./T)); 
+  	k9l_ = 6.67e-12 * sqrt(T) * exp(-(1. + 63590./T));
     k9h_ = 3.52e-9 * exp(-43900.0 / T);
-    k10l_ = 5.996e-30 * pow(T, 4.1881) / pow((1.0 + 6.761e-6 * T), 5.6881)  
+    k10l_ = 5.996e-30 * pow(T, 4.1881) / pow((1.0 + 6.761e-6 * T), 5.6881)
             * exp(-54657.4 / T);
-    k10h_ = 1.3e-9 * exp(-53300.0 / T); 
+    k10h_ = 1.3e-9 * exp(-53300.0 / T);
     ncrH_ = pow(10, (3.0 - 0.416 * logT4 - 0.327 * logT4*logT4));
     ncrH2_ = pow(10, (4.845 - 1.3 * logT4 + 1.62 * logT4*logT4));
     ncr = 1. / ( y[iH_]/ncrH_ + y[iH2_]/ncrH2_ );
     n2ncr = nH_ / ncr;
-    k2body_[15] = pow(10, log10(k9h_) *  n2ncr/(1. + n2ncr) 
+    k2body_[15] = pow(10, log10(k9h_) *  n2ncr/(1. + n2ncr)
                          + log10(k9l_) / (1. + n2ncr)) * nH_;
-    k2body_[16] = pow(10, log10(k10h_) *  n2ncr/(1. + n2ncr) 
+    k2body_[16] = pow(10, log10(k10h_) *  n2ncr/(1. + n2ncr)
                          + log10(k10l_) / (1. + n2ncr)) * nH_;
     /* (17) *H + *e -> H+ + 2 *e       --(11) Relates to Te */
-    k2body_[17] *= exp( -3.271396786e1 + 
-                      (1.35365560e1 + (- 5.73932875 + (1.56315498 
+    k2body_[17] *= exp( -3.271396786e1 +
+                      (1.35365560e1 + (- 5.73932875 + (1.56315498
                     + (- 2.877056e-1 + (3.48255977e-2 + (- 2.63197617e-3
                     + (1.11954395e-4 + (-2.03914985e-6)
         *lnTe)*lnTe)*lnTe)*lnTe)*lnTe)*lnTe)*lnTe)*lnTe
@@ -630,42 +631,42 @@ void gow17::ChemInit_(const double *y) {
    *   (4) S+ + *e + gr -> *S + gr
    *   (5) Si+ + *e + gr -> *Si + gr
    *   , rate dependent on e aboundance. */
-	psi_gr_fac_ = 1.7 * (*GPE_) * sqrt(T) / nH_; 
+	psi_gr_fac_ = 1.7 * (*GPE_) * sqrt(T) / nH_;
 	psi = psi_gr_fac_ / y[ie_];
-	kgr_[1] = 1.0e-14 * cHp_[0] / 
+	kgr_[1] = 1.0e-14 * cHp_[0] /
 		           (
-			           1.0 + cHp_[1]*pow(psi, cHp_[2]) * 
+			           1.0 + cHp_[1]*pow(psi, cHp_[2]) *
 								   (1.0 + cHp_[3] * pow(T, cHp_[4])
-										             *pow( psi, -cHp_[5]-cHp_[6]*log(T) ) 
-									 ) 
+										             *pow( psi, -cHp_[5]-cHp_[6]*log(T) )
+									 )
 								) * nH_ * Zd_ * fHplusgr_;
-	kgr_[2] = 1.0e-14 * cCp_[0] / 
+	kgr_[2] = 1.0e-14 * cCp_[0] /
 		           (
-			           1.0 + cCp_[1]*pow(psi, cCp_[2]) * 
+			           1.0 + cCp_[1]*pow(psi, cCp_[2]) *
 								   (1.0 + cCp_[3] * pow(T, cCp_[4])
-										             *pow( psi, -cCp_[5]-cCp_[6]*log(T) ) 
-									 ) 
+										             *pow( psi, -cCp_[5]-cCp_[6]*log(T) )
+									 )
 								) * nH_ * Zd_ * fCplusgr_;
-	kgr_[3] = 1.0e-14 * cHep_[0] / 
+	kgr_[3] = 1.0e-14 * cHep_[0] /
 		           (
-			           1.0 + cHep_[1]*pow(psi, cHep_[2]) * 
+			           1.0 + cHep_[1]*pow(psi, cHep_[2]) *
 								   (1.0 + cHep_[3] * pow(T, cHep_[4])
-										             *pow( psi, -cHep_[5]-cHep_[6]*log(T) ) 
-									 ) 
+										             *pow( psi, -cHep_[5]-cHep_[6]*log(T) )
+									 )
 								) * nH_ * Zd_ * fHeplusgr_;
-	kgr_[4] = 1.0e-14 * cSp_[0] / 
+	kgr_[4] = 1.0e-14 * cSp_[0] /
 		           (
-			           1.0 + cSp_[1]*pow(psi, cSp_[2]) * 
+			           1.0 + cSp_[1]*pow(psi, cSp_[2]) *
 								   (1.0 + cSp_[3] * pow(T, cSp_[4])
-										             *pow( psi, -cSp_[5]-cSp_[6]*log(T) ) 
-									 ) 
+										             *pow( psi, -cSp_[5]-cSp_[6]*log(T) )
+									 )
 								) * nH_ * Zd_ * fSplusgr_;
-	kgr_[5] = 1.0e-14 * cSip_[0] / 
+	kgr_[5] = 1.0e-14 * cSip_[0] /
 		           (
-			           1.0 + cSip_[1]*pow(psi, cSip_[2]) * 
+			           1.0 + cSip_[1]*pow(psi, cSip_[2]) *
 								   (1.0 + cSip_[3] * pow(T, cSip_[4])
-										             *pow( psi, -cSip_[5]-cSip_[6]*log(T) ) 
-									 ) 
+										             *pow( psi, -cSip_[5]-cSip_[6]*log(T) )
+									 )
 								) * nH_ * Zd_ * fSiplusgr_;
 	return;
 }
@@ -676,10 +677,10 @@ void gow17::SetGhostSpec_(const N_Vector y, double yghost[kDimen+n_ghost_]) {
 		yghost[i] = NV_Ith_S(y, i);
 	}
 	/*set the ghost species*/
- 	yghost[iC_] = xC_ - yghost[iHCOplus_] -  yghost[iCH_] 
-                     - yghost[iCO_] - yghost[iCplus_]; 
-	yghost[iO_] = xO_ - yghost[iHCOplus_] -  yghost[iOH_] 
-                     - yghost[iCO_] - yghost[iOplus_]; 
+ 	yghost[iC_] = xC_ - yghost[iHCOplus_] -  yghost[iCH_]
+                     - yghost[iCO_] - yghost[iCplus_];
+	yghost[iO_] = xO_ - yghost[iHCOplus_] -  yghost[iOH_]
+                     - yghost[iCO_] - yghost[iOplus_];
 	yghost[iHe_] = xHe_ - yghost[iHeplus_]; /*HeI*/
 	yghost[iS_] = xS_ - yghost[iSplus_]; /*SI*/
 	yghost[iSi_] = xSi_ - yghost[iSiplus_]; /*SiI*/
@@ -859,8 +860,8 @@ void gow17::IsH2rvCooling(const bool isH2rv_cooling) {
   return;
 }
 
-void gow17::IsH2grHeating(const bool isH2gr_heating) {
-  isH2gr_heating_ = isH2gr_heating;
+void gow17::IsDustCooling(const bool isDust_cooling) {
+  isDust_cooling_ = isDust_cooling;
   return;
 }
 
@@ -954,7 +955,12 @@ double gow17::dEdt_(const double *y, const bool is_store_rates) {
   }
   /* dust thermo emission */
   //const double GDust = Thermo::CoolingDust(Zd_,  nH_, T, (*GISRF_));
-  const double GDust = Thermo::CoolingDustTd(Zd_,  nH_, T, 10.);
+  double GDust;
+  if (isDust_cooling_) {
+    GDust = Thermo::CoolingDustTd(Zd_,  nH_, T, 10.);
+  } else {
+    GDust = 0.;
+  }
   /* reconbination of e on PAHs */
   const double GRec = Thermo::CoolingRec(Zd_,  T,  nH_*y[ie_], (*GPE_));
   /* collisional dissociation of H2 */
@@ -982,7 +988,7 @@ double gow17::dEdt_(const double *y, const bool is_store_rates) {
      GHIion_ = GHIion;
   }
   dEdt = (LCR + LPE + LH2gr + LH2pump + LH2diss)
-            - (GCII + GCI + GOI + GLya + GCOR 
+            - (GCII + GCI + GOI + GLya + GCOR
                 + GH2 + GDust + GRec + GH2diss + GHIion);
   //printf("LCR=%.2e, LPE=%.2e, LH2gr=%.2e, LH2pump=%.2e LH2diss=%.2e\n",
   //       LCR , LPE , LH2gr , LH2pump , LH2diss);
