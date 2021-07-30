@@ -72,29 +72,29 @@ const double Thermo::LLTECO_[lenNeffCO_*lenTCO_] = {
 23.76, 22.66, 22.06, 21.35, 20.71, 20.42, 19.03, 18.26, 17.93, 17.74, 17.61
 };
 const double Thermo::nhalfCO_[lenNeffCO_*lenTCO_] = {
-  3.29, 3.49 ,3.67  ,3.97,  4.30, 4.46, 5.17, 5.47, 5.53, 5.30, 4.70, 
-  3.27, 3.48 ,3.66  ,3.96,  4.30, 4.45, 5.16, 5.47, 5.53, 5.30, 4.70, 
-  3.22, 3.45 ,3.64  ,3.94,  4.29, 4.45, 5.16, 5.47, 5.53, 5.30, 4.70, 
-  3.07, 3.34 ,3.56  ,3.89,  4.26, 4.42, 5.15, 5.46, 5.52, 5.30, 4.70, 
-  2.72, 3.09 ,3.35  ,3.74,  4.16, 4.34, 5.13, 5.45, 5.51, 5.29, 4.68, 
-  2.24, 2.65 ,2.95  ,3.42,  3.92, 4.14, 5.06, 5.41, 5.48, 5.26, 4.64, 
-  1.74, 2.15 ,2.47  ,2.95,  3.49, 3.74, 4.86, 5.30, 5.39, 5.17, 4.53, 
-  1.24, 1.65 ,1.97  ,2.45,  3.00, 3.25, 4.47, 5.02, 5.16, 4.94, 4.27, 
- 0.742, 1.15 ,1.47  ,1.95,  2.50, 2.75, 3.98, 4.57, 4.73, 4.52, 3.84, 
- 0.242, 0.652,0.966 ,1.45,  2.00, 2.25, 3.48, 4.07, 4.24, 4.03, 3.35, 
+  3.29, 3.49 ,3.67  ,3.97,  4.30, 4.46, 5.17, 5.47, 5.53, 5.30, 4.70,
+  3.27, 3.48 ,3.66  ,3.96,  4.30, 4.45, 5.16, 5.47, 5.53, 5.30, 4.70,
+  3.22, 3.45 ,3.64  ,3.94,  4.29, 4.45, 5.16, 5.47, 5.53, 5.30, 4.70,
+  3.07, 3.34 ,3.56  ,3.89,  4.26, 4.42, 5.15, 5.46, 5.52, 5.30, 4.70,
+  2.72, 3.09 ,3.35  ,3.74,  4.16, 4.34, 5.13, 5.45, 5.51, 5.29, 4.68,
+  2.24, 2.65 ,2.95  ,3.42,  3.92, 4.14, 5.06, 5.41, 5.48, 5.26, 4.64,
+  1.74, 2.15 ,2.47  ,2.95,  3.49, 3.74, 4.86, 5.30, 5.39, 5.17, 4.53,
+  1.24, 1.65 ,1.97  ,2.45,  3.00, 3.25, 4.47, 5.02, 5.16, 4.94, 4.27,
+ 0.742, 1.15 ,1.47  ,1.95,  2.50, 2.75, 3.98, 4.57, 4.73, 4.52, 3.84,
+ 0.242, 0.652,0.966 ,1.45,  2.00, 2.25, 3.48, 4.07, 4.24, 4.03, 3.35,
 -0.258, 0.152,0.466 ,0.95,	 1.50, 1.75, 2.98, 3.57, 3.74, 3.53, 2.85
 };
 const double Thermo::alphaCO_[lenNeffCO_*lenTCO_] = {
-0.439, 0.409, 0.392, 0.370, 0.361, 0.357, 0.385, 0.437, 0.428, 0.354, 0.322,	
-0.436, 0.407, 0.391, 0.368, 0.359, 0.356, 0.385, 0.437, 0.427, 0.354, 0.322,	
-0.428, 0.401, 0.385, 0.364, 0.356, 0.352, 0.383, 0.436, 0.427, 0.352, 0.320,	
-0.416, 0.388, 0.373, 0.353, 0.347, 0.345, 0.380, 0.434, 0.425, 0.349, 0.316,	
-0.416, 0.378, 0.360, 0.338, 0.332, 0.330, 0.371, 0.429, 0.421, 0.341, 0.307,	
-0.450, 0.396, 0.367, 0.334, 0.322, 0.317, 0.355, 0.419, 0.414, 0.329, 0.292,	
-0.492, 0.435, 0.403, 0.362, 0.339, 0.329, 0.343, 0.406, 0.401, 0.317, 0.276,	
-0.529, 0.473, 0.441, 0.404, 0.381, 0.370, 0.362, 0.410, 0.392, 0.316, 0.272,	
-0.555, 0.503, 0.473, 0.440, 0.423, 0.414, 0.418, 0.446, 0.404, 0.335, 0.289,	
-0.582, 0.528, 0.499, 0.469, 0.457, 0.451, 0.470, 0.487, 0.432, 0.364, 0.310,	
+0.439, 0.409, 0.392, 0.370, 0.361, 0.357, 0.385, 0.437, 0.428, 0.354, 0.322,
+0.436, 0.407, 0.391, 0.368, 0.359, 0.356, 0.385, 0.437, 0.427, 0.354, 0.322,
+0.428, 0.401, 0.385, 0.364, 0.356, 0.352, 0.383, 0.436, 0.427, 0.352, 0.320,
+0.416, 0.388, 0.373, 0.353, 0.347, 0.345, 0.380, 0.434, 0.425, 0.349, 0.316,
+0.416, 0.378, 0.360, 0.338, 0.332, 0.330, 0.371, 0.429, 0.421, 0.341, 0.307,
+0.450, 0.396, 0.367, 0.334, 0.322, 0.317, 0.355, 0.419, 0.414, 0.329, 0.292,
+0.492, 0.435, 0.403, 0.362, 0.339, 0.329, 0.343, 0.406, 0.401, 0.317, 0.276,
+0.529, 0.473, 0.441, 0.404, 0.381, 0.370, 0.362, 0.410, 0.392, 0.316, 0.272,
+0.555, 0.503, 0.473, 0.440, 0.423, 0.414, 0.418, 0.446, 0.404, 0.335, 0.289,
+0.582, 0.528, 0.499, 0.469, 0.457, 0.451, 0.470, 0.487, 0.432, 0.364, 0.310,
 0.596, 0.546, 0.519, 0.492, 0.483, 0.479, 0.510, 0.516, 0.448, 0.372, 0.313
 };
 const double Thermo::logTg_[lenTg_] = {
@@ -104,7 +104,7 @@ const double Thermo::logTg_[lenTg_] = {
 const double Thermo::lognH_[lennH_] = {
   0.        , 0.42857143, 0.85714286, 1.28571429, 1.71428571, 2.14285714,
   2.57142857, 3.        , 3.42857143, 3.85714286, 4.28571429, 4.71428571,
-  5.14285714, 5.57142857, 6.        
+  5.14285714, 5.57142857, 6.
 };
 const double Thermo::logps_[lennH_ * lenTg_] = {
    33.60923439, 32.35048647, 31.6458604 , 31.02132235, 30.42222289 ,
@@ -148,7 +148,7 @@ double Thermo::HeatingCr(const double xe, const double nH,
 				      const double kHI, const double kHe, const double kH2) {
 	/* ionization rate per H*/
 	const double ktot = kHI*xHI + kHe*xHe + kH2*xH2;
-	/* heating rate per ionization in atomic region. 
+	/* heating rate per ionization in atomic region.
 	 * Draine ISM book eq (30.1)*/
   double qHI;
   if (xe > 1.0e-9) {
@@ -179,9 +179,9 @@ double Thermo::HeatingCr(const double xe, const double nH,
 double Thermo::HeatingPE(const double G, const double Zd, const double T,
                          const double ne){
   const double x = 1.7 * G * sqrt(T)/ne + 50.;
-  const double fac = ( CPE_[0] + CPE_[1]*pow(T, CPE_[4]) ) / 
+  const double fac = ( CPE_[0] + CPE_[1]*pow(T, CPE_[4]) ) /
     (
-     1. + CPE_[2]*pow(x, CPE_[5]) * ( 1. + CPE_[3]*pow(x, CPE_[6]) ) 
+     1. + CPE_[2]*pow(x, CPE_[5]) * ( 1. + CPE_[3]*pow(x, CPE_[6]) )
      );
   const double heating = 1.7e-26 * G * Zd * fac;
   return heating;
@@ -237,8 +237,8 @@ double Thermo::q10CII_(const double nHI, const double nH2, const double ne,
 	return (k10e*ne + k10HI*nHI + k10H2*nH2);
 }
 
-double Thermo::CoolingCII(const double xCII, const double nHI, 
-										   		const double nH2, const double ne, 
+double Thermo::CoolingCII(const double xCII, const double nHI,
+										   		const double nH2, const double ne,
 													const double T) {
 	const double q10 = q10CII_(nHI, nH2, ne, T);
 	const double q01 = (g1CII_/g0CII_) * q10 * exp( -E10CII_/(kb_*T) );
@@ -246,19 +246,17 @@ double Thermo::CoolingCII(const double xCII, const double nHI,
 }
 
 double Thermo::CoolingLya(const double xHI, const double ne, const double T) {
-  const double A = 6.3803e-9;
-  const double beta = 1.17;
   const double T4 = T / 1.0e4;
-  const double fac = A * pow(T4, beta);
+  const double fac = 5.31e-8*pow(T4, 0.15)/(1. + pow(T4/5., 0.65));
   const double k01e = fac * exp(-11.84/T4);
   const double q01 = k01e * ne;
   const double q10 = (g0HI_/g1HI_) * fac * ne;
 	return Cooling2Level_(q01, q10, A10HI_, E10HI_, xHI);
 }
 
-double Thermo::CoolingCI(const double xCI, const double nHI, 
+double Thermo::CoolingCI(const double xCI, const double nHI,
 												 const double nH2, const double ne, const double T) {
-	/*e collisional coefficents from Johnson, Burke, & Kingston 1987, 
+	/*e collisional coefficents from Johnson, Burke, & Kingston 1987,
 	 * JPhysB, 20, 2553*/
 	const double T2 = T/100.;
 	const double lnT2 = log(T2);
@@ -268,19 +266,19 @@ double Thermo::CoolingCI(const double xCI, const double nHI,
 	double k10e, k20e, k21e;
 	double lngamma10e, lngamma20e, lngamma21e; /*collisional strength*/
 	if (T < 1.0e3) {
-		lngamma10e = (((-6.56325e-4*lnT -1.50892e-2)*lnT + 3.61184e-1)*lnT 
+		lngamma10e = (((-6.56325e-4*lnT -1.50892e-2)*lnT + 3.61184e-1)*lnT
 				          -7.73782e-1)*lnT - 9.25141;
 		lngamma20e = (((0.705277e-2*lnT - 0.111338)*lnT +0.697638)*lnT
 				          - 1.30743)*lnT -7.69735;
-		lngamma21e = (((2.35272e-3*lnT - 4.18166e-2)*lnT +0.358264)*lnT 
+		lngamma21e = (((2.35272e-3*lnT - 4.18166e-2)*lnT +0.358264)*lnT
 				          - 0.57443)*lnT -7.4387;
 
 	} else {
 		lngamma10e = (((1.0508e-1*lnT - 3.47620)*lnT + 4.2595e1)*lnT
 									- 2.27913e2)*lnT + 4.446e2;
-		lngamma20e = (((9.38138e-2*lnT - 3.03283)*lnT +3.61803e1)*lnT 
+		lngamma20e = (((9.38138e-2*lnT - 3.03283)*lnT +3.61803e1)*lnT
 									- 1.87474e2)*lnT +3.50609e2;
-		lngamma21e = (((9.78573e-2*lnT - 3.19268)*lnT +3.85049e1)*lnT 
+		lngamma21e = (((9.78573e-2*lnT - 3.19268)*lnT +3.85049e1)*lnT
 				          - 2.02193e2)*lnT +3.86186e2;
 	}
 	k10e = fac * exp(lngamma10e) / g1CI_;
@@ -349,7 +347,7 @@ double Thermo::CoolingOI(const double xOI, const double nHI,
 												A21OI_, E10OI_, E20OI_, E21OI_, xOI);
 }
 
-double Thermo::CoolingCOR(const double xCO, const double nHI, const double nH2, 
+double Thermo::CoolingCOR(const double xCO, const double nHI, const double nH2,
                           const double ne, const double temp, const double NCOeff) {
   /* effective number density of colliders*/
   /* TODO: potentially can use despotic to generate a more accurate value for
@@ -377,17 +375,17 @@ double Thermo::CoolingCOR(const double xCO, const double nHI, const double nH2,
   const double log_L0 = - Interp::LP1Di_(TCO_, L0CO_, iT0, T);
   const double L0 = pow(10, log_L0);
   /* LLTE */
-  const double log_LLTE = - Interp::LP2Di_(TCO_, NeffCO_, lenTCO_, iT0, iNeff0, 
+  const double log_LLTE = - Interp::LP2Di_(TCO_, NeffCO_, lenTCO_, iT0, iNeff0,
                                            LLTECO_, T, log_NCOeff);
   const double LLTE = pow(10, log_LLTE);
   /* n1/2*/
-  const double log_nhalf = Interp::LP2Di_(TCO_, NeffCO_, lenTCO_, iT0, iNeff0, 
+  const double log_nhalf = Interp::LP2Di_(TCO_, NeffCO_, lenTCO_, iT0, iNeff0,
                                           nhalfCO_, T, log_NCOeff);
   const double nhalf = pow(10, log_nhalf);
   /* alpha*/
-  const double alpha = Interp::LP2Di_(TCO_, NeffCO_, lenTCO_, iT0, iNeff0, 
+  const double alpha = Interp::LP2Di_(TCO_, NeffCO_, lenTCO_, iT0, iNeff0,
                                       alphaCO_, T, log_NCOeff);
-  const double inv_LCO = 1./L0 + neff/LLTE 
+  const double inv_LCO = 1./L0 + neff/LLTE
                          + 1./L0 * pow(neff/nhalf, alpha) * (1. - nhalf*L0/LLTE);
   return (1./inv_LCO) * neff * xCO * facT;
 }
@@ -432,7 +430,7 @@ double Thermo::CoolingH2(const double xH2, const double nHI, const double nH2,
                 -0.14913216e0*logT3_4 -0.033638326e0*logT3_5);
   /* He */
   LHe = pow(10, -2.3689237e1 +2.1892372e0*logT3
-                -0.81520438e0*logT3_2 +0.29036281e0*logT3_3 
+                -0.81520438e0*logT3_2 +0.29036281e0*logT3_3
                 -0.16596184e0*logT3_4 +0.19191375e0*logT3_5);
   /* H+ */
   LHplus = pow(10, -2.1716699e1 +1.3865783e0*logT3
@@ -479,17 +477,17 @@ double Thermo::CoolingDust(const double Zd, const double nH, const double Tg,
   }
 }
 
-double Thermo::CoolingDustTd(const double Zd, const double nH,  const double Tg, 
+double Thermo::CoolingDustTd(const double Zd, const double nH,  const double Tg,
                             const double Td) {
   const double L1 = alpha_GD_ * nH * sqrt(Tg) * (Tg - Td);
   return L1;
 }
 
-double Thermo::CoolingRec(const double Zd, const double T, const double ne, 
+double Thermo::CoolingRec(const double Zd, const double T, const double ne,
                           const double G) {
   const double x = 1.7 * G * sqrt(T)/ne + 50.;
   const double lnx = log(x);
-  const double cooling = 1.0e-28 * ne * pow(T, DPE_[0] + DPE_[1]/lnx) 
+  const double cooling = 1.0e-28 * ne * pow(T, DPE_[0] + DPE_[1]/lnx)
                           * exp( DPE_[2] + (DPE_[3] - DPE_[4]*lnx)*lnx );
   return cooling * Zd;
 }
