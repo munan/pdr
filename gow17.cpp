@@ -56,7 +56,7 @@ const int gow17::outcr_[n_cr_] = {id("H2+"), id("He+"), id("H+"),
                                   id("S+"), id("Si+")};
 const double gow17::kcr_base_[n_cr_] =
 {2.0, 1.1, 1.0,
-560., 90., 6.52,
+520., 92., 6.52,
 2040., 8400.};
 
 

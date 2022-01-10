@@ -1,8 +1,8 @@
 cr  +   H2 ->  H2+,     kcr = 2.00e+00 ksi s-1 H-1
 cr  +  *He ->  He+,     kcr = 1.10e+00 ksi s-1 H-1
 cr  +   *H ->   H+,     kcr = 1.00e+00 ksi s-1 H-1
-cr  +   *C ->   C+,     kcr = 5.60e+02 ksi s-1 H-1
-cr  +   CO ->   *O,     kcr = 9.00e+01 ksi s-1 H-1
+cr  +   *C ->   C+,     kcr = 5.20e+02 ksi s-1 H-1
+cr  +   CO ->   *O,     kcr = 9.20e+01 ksi s-1 H-1
 cr  +   CO -> HCO+,     kcr = 6.52e+00 ksi s-1 H-1
 cr  +   *S ->   S+,     kcr = 2.04e+03 ksi s-1 H-1
 cr  +  *Si ->  Si+,     kcr = 8.40e+03 ksi s-1 H-1
