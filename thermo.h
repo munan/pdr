@@ -20,12 +20,12 @@ class Thermo {
 		 * xs = ns/nH, abundances of species s.
 		 * ks: cosmic ray ioniztion rate per s particle.
 		 * nH: number density of H atom.
-		 * Return: 
+		 * Return:
 		 * cosmic ray heating in erg H^-1 s^-1*/
 		static double HeatingCr(const double xe, const double nH,
 										 const double xHI, const double xHe, const double xH2,
 		   							 const double kHI, const double kHe, const double kH2);
-		/* Heating by photo electric effect on dust, including collsional cooling. 
+		/* Heating by photo electric effect on dust, including collsional cooling.
      * WD2001 Table 2 and 3. Use the diffuse ISM: Rv=3.1, ISRF, bc=4.
 		 * Arguments:
 		 * G: UV radiation scaled by solar neighbourhood value, including
@@ -43,11 +43,11 @@ class Thermo {
      * Arguments:
      * xi = ni/nH
      * T: temperature in K
-     * kgr: grain reaction rates, kgr_ in gow17. 
+     * kgr: grain reaction rates, kgr_ in gow17.
      * Return:
      * Heating rate by H2 formation on dust grains in erg H^-1 s^-1. */
     static double HeatingH2gr(const double xHI, const double xH2, const double nH,
-                       const double T, const double kgr);
+                       const double T, const double kgr, const double dot_xH2_photo);
     /* Heating by H2 UV pumping.
      * From Hollenbach + McKee 1979
      * Arguments:
@@ -121,7 +121,7 @@ class Thermo {
      * notes.
      * Return:
      * Cooling rate for CO rotational lines in erg H^-1 s^-1*/
-    static double CoolingCOR(const double xCO, const double nHI, const double nH2, 
+    static double CoolingCOR(const double xCO, const double nHI, const double nH2,
                       const double ne, const double T, const double NCOeff);
     /* Cooling by H2 vibration and rotation lines.
      * Collision species: HI, H2, He, H+, e
@@ -160,7 +160,7 @@ class Thermo {
      * Td: dust temperature
      * Return:
      * Cooling rate for dust in erg H^-1 s^-1 */
-    static double CoolingDustTd(const double Zd, const double nH,  const double Tg, 
+    static double CoolingDustTd(const double Zd, const double nH,  const double Tg,
                                 const double Td);
     /* Cooling by reconbination of e on PAHs.
      * From WD2001 Eq(45).
@@ -172,10 +172,10 @@ class Thermo {
      * extinction. G=G0 * exp(-NH*sigmaPE_) at one line of sight.
      * Return:
      * Cooling rate for  recombination of e on PAHs in erg H^-1 s^-1 */
-    static double CoolingRec(const double Zd, const double T, const double ne, 
+    static double CoolingRec(const double Zd, const double T, const double ne,
                              const double G);
     /* Cooling by collisional dissociation of H2
-     *  H2 + *H -> 3 *H 
+     *  H2 + *H -> 3 *H
      *  H2 + H2 -> H2 + 2 *H
      * reaction heat: 4.48 eV from Krome Paper
      * Arguments:
@@ -275,7 +275,7 @@ class Thermo {
 		/*line cooling rate per H for 2 level atom. Ignore radiative excitation
 		 * and de-excitation, and assume optically thin.
 		 * Arguments:
-		 * q01 = \sum (nc * k_{s, 01}). Collisional excitation rate per second 
+		 * q01 = \sum (nc * k_{s, 01}). Collisional excitation rate per second
 		 * for all the collider species sumed up together from level 0 to 1.
 		 * q10 = \sum (nc * k_{s, 10}). Collisional de-excitation rate per second,
 		 * similar to q01.
@@ -291,7 +291,7 @@ class Thermo {
 		/*line cooling rate per H for 3 level atom. Ignore radiative excitation
 		 * and de-excitation, and assume optically thin.
 		 * Arguments:
-		 * qij = \sum (nc * k_{s, ij}). Collisional excitation rate per second 
+		 * qij = \sum (nc * k_{s, ij}). Collisional excitation rate per second
 		 * for all the collider species sumed up together from level i to j.
 		 * Aij: Enstein A coefficent for spontanious emission from level i to j,
 		 * in sec^-1, i > j.
