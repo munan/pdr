@@ -144,10 +144,8 @@ const double Thermo::CPE_[7] = {5.22, 2.25, 0.04996, 0.00430,
 const double Thermo::DPE_[5] = {0.4535, 2.234, -6.266, 1.442, 0.05089};
 
 double Thermo::HeatingCr(const double xe, const double nH,
-		          const double xHI, const double xHe, const double xH2,
-				      const double kHI, const double kHe, const double kH2) {
-	/* ionization rate per H*/
-	const double ktot = kHI*xHI + kHe*xHe + kH2*xH2;
+		                     const double xHI, const double xH2,
+                         const double crir_prim) {
 	/* heating rate per ionization in atomic region.
 	 * Draine ISM book eq (30.1)*/
   double qHI;
@@ -173,7 +171,7 @@ double Thermo::HeatingCr(const double xe, const double nH,
     qH2 = 18. * eV_;
   }
 	const double qtot = xHI*qHI + 2*xH2*qH2;
-	return (ktot*qtot);
+	return (crir_prim * qtot);
 }
 
 double Thermo::HeatingPE(const double G, const double Zd, const double T,

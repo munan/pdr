@@ -18,13 +18,12 @@ class Thermo {
 		/* Heating by cosmic ray ionization of H, He, and H2.
 		 * Arguments:
 		 * xs = ns/nH, abundances of species s.
-		 * ks: cosmic ray ioniztion rate per s particle.
 		 * nH: number density of H atom.
+     * crir_prim: primary cr ionsation rate per H nucleus
 		 * Return:
 		 * cosmic ray heating in erg H^-1 s^-1*/
 		static double HeatingCr(const double xe, const double nH,
-										 const double xHI, const double xHe, const double xH2,
-		   							 const double kHI, const double kHe, const double kH2);
+										 const double xHI, const double xH2, const double crir_prim);
 		/* Heating by photo electric effect on dust, including collsional cooling.
      * WD2001 Table 2 and 3. Use the diffuse ISM: Rv=3.1, ISRF, bc=4.
 		 * Arguments:

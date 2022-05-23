@@ -879,8 +879,7 @@ double gow17::dEdt_(const double *y, const bool is_store_rates) {
   /*NOTE: because these depends on rates, make sure ChemInit is called before.*/
   /*NOTE: the kcr_[i] assume the order of equastions are not changed*/
   const double LCR = Thermo::HeatingCr(y[ie_],  nH_,
-										        y[iH_],  y[iHe_],  y[iH2_],
-		   							        kcr_[icr_H_],  kcr_[icr_He_],  kcr_[icr_H2_]);
+										        y[iH_],  y[iH2_], ion_rate_);
   /*photo electric effect on dust*/
   const double LPE = Thermo::HeatingPE((*GPE_), Zd_, T, nH_*y[ie_]);
   /*H2 formation on dust grains*/
