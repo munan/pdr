@@ -507,7 +507,7 @@ double Thermo::HeatingH2gr(const double xHI, const double xH2, const double nH,
                            const double dot_xH2_photo) {
   /* critical density ncr, heating only effective at n > ncr */
   const double A = 2.0e-7;
-  const double D = dot_xH2_photo / 5.7;
+  const double D = dot_xH2_photo;
   const double t = 1. + T/1000.;
   const double geff_H = pow(10, -11.06 + 0.0555/t -2.390/(t*t));
   const double geff_H2 = pow(10, -11.08 -3.671/t -2.023/(t*t));
@@ -520,7 +520,7 @@ double Thermo::HeatingH2pump(const double xHI, const double xH2, const double nH
                              const double T, const double dot_xH2_photo) {
   /* critical density ncr, heating only effective at n > ncr */
   const double A = 2.0e-7;
-  const double D = dot_xH2_photo / 5.7;
+  const double D = dot_xH2_photo;
   const double t = 1. + T/1000.;
   const double geff_H = pow(10, -11.06 + 0.0555/t -2.390/(t*t));
   const double geff_H2 = pow(10, -11.08 -3.671/t -2.023/(t*t));
