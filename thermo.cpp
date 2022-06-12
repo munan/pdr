@@ -504,10 +504,10 @@ double Thermo::CoolingHIion(const double xHI, const double xe, const double k_H_
 
 double Thermo::HeatingH2gr(const double xHI, const double xH2, const double nH,
                            const double T, const double kgr,
-                           const double dot_xH2_photo) {
+                           const double k_xH2_photo) {
   /* critical density ncr, heating only effective at n > ncr */
   const double A = 2.0e-7;
-  const double D = dot_xH2_photo;
+  const double D = k_xH2_photo;
   const double t = 1. + T/1000.;
   const double geff_H = pow(10, -11.06 + 0.0555/t -2.390/(t*t));
   const double geff_H2 = pow(10, -11.08 -3.671/t -2.023/(t*t));
@@ -517,20 +517,20 @@ double Thermo::HeatingH2gr(const double xHI, const double xH2, const double nH,
 }
 
 double Thermo::HeatingH2pump(const double xHI, const double xH2, const double nH,
-                             const double T, const double dot_xH2_photo) {
+                             const double T, const double k_xH2_photo) {
   /* critical density ncr, heating only effective at n > ncr */
   const double A = 2.0e-7;
-  const double D = dot_xH2_photo;
+  const double D = k_xH2_photo;
   const double t = 1. + T/1000.;
   const double geff_H = pow(10, -11.06 + 0.0555/t -2.390/(t*t));
   const double geff_H2 = pow(10, -11.08 -3.671/t -2.023/(t*t));
   const double ncr = (A + D) / (geff_H*xHI + geff_H2*xH2);
   const double f = 1. / (1. + ncr/nH);
-  return dot_xH2_photo * 8. * 2.0*f * eV_ * xH2;
+  return D * 8. * 2.0*f * eV_ * xH2;
 }
 
-double Thermo::HeatingH2diss(const double dot_xH2_photo) {
-  return dot_xH2_photo * 0.4 * eV_;
+double Thermo::HeatingH2diss(const double k_xH2_photo, const double xH2) {
+  return k_xH2_photo * xH2 * 0.4 * eV_;
 }
 
 double Thermo::CvCold(const double xH2, const double xHe_total, const double xe) {

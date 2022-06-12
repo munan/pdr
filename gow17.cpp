@@ -883,21 +883,21 @@ double gow17::dEdt_(const double *y, const bool is_store_rates) {
   /*photo electric effect on dust*/
   const double LPE = Thermo::HeatingPE((*GPE_), Zd_, T, nH_*y[ie_]);
   /*H2 formation on dust grains*/
-  const double dot_xH2_photo = kph_[iph_H2_] * y[iH2_];
+  const double k_xH2_photo = kph_[iph_H2_] ;
   double LH2gr;
   if (isH2gr_heating_) {
     LH2gr = Thermo::HeatingH2gr(y[iH_],  y[iH2_],  nH_,
-                                T,  kgr_[igr_H_], dot_xH2_photo);
+                                T,  kgr_[igr_H_], k_xH2_photo);
   } else {
     LH2gr = 0;
   }
   /*H2 UV pumping*/
   const double LH2pump = Thermo::HeatingH2pump(y[iH_],  y[iH2_],  nH_,
-                                               T,  dot_xH2_photo);
+                                               T,  k_xH2_photo);
   /*H2 photo dissiociation.*/
   double LH2diss;
   if (isH2diss_heating_) {
-    LH2diss = Thermo::HeatingH2diss(dot_xH2_photo);
+    LH2diss = Thermo::HeatingH2diss(k_xH2_photo, y[iH2_]);
   } else {
     LH2diss = 0;
   }

@@ -43,29 +43,30 @@ class Thermo {
      * xi = ni/nH
      * T: temperature in K
      * kgr: grain reaction rates, kgr_ in gow17.
+     * k_xH2_photo: rate of photo dissociation of H2 by UV light per H2
      * Return:
      * Heating rate by H2 formation on dust grains in erg H^-1 s^-1. */
     static double HeatingH2gr(const double xHI, const double xH2, const double nH,
-                       const double T, const double kgr, const double dot_xH2_photo);
+                       const double T, const double kgr, const double k_xH2_photo);
     /* Heating by H2 UV pumping.
      * From Hollenbach + McKee 1979
      * Arguments:
      * xi = ni/nH
      * T: temperature in K
-     * dot_xH2_photo = dxH2/dt by photo dissociation of H2 by UV light.
+     * k_xH2_photo: rate of photo dissociation of H2 by UV light per H2
      * Calculated in RHS in gow17.
      * Return:
      * Heating rate by H2 UV pumping in erg H^-1 s^-1.*/
     static double HeatingH2pump(const double xHI, const double xH2, const double nH,
-                         const double T, const double dot_xH2_photo);
+                         const double T, const double k_xH2_photo);
     /* Heating by H2 photo dissiociation.
      * From Black + Dalgarno 1977, 0.4eV per reaction.
      * Arguments:
-     * dot_xH2_photo = dxH2/dt by photo dissociation of H2 by UV light.
+     * k_xH2_photo: rate of photo dissociation of H2 by UV light per H2
      * Calculated in RHS in gow17.
      * Return:
      * Heating rate by H2 photo dissiociation in erg H^-1 s^-1.*/
-    static double HeatingH2diss(const double dot_xH2_photo);
+    static double HeatingH2diss(const double k_xH2_photo, const double xH2);
 		/* Cooling by C+ fine structure line.
 		 * Collisional species: HI, H2, e.
 		 * Arguments:
