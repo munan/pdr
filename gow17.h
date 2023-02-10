@@ -311,7 +311,6 @@ class gow17 : public Ode {
     double *GISRF_;
     double *Gph_;
     /* scale formation rate on grains.*/
-    double fH2gr_;
     double fHplusgr_;
     double fCplusgr_;
     double fSplusgr_;

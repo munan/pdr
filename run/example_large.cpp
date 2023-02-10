@@ -108,7 +108,6 @@ int main() {
     odegow17.SetZd(Zdg);
 
     //Set grain reaction rates
-    odegow17.SetfH2gr(10./sqrt(temp));
     odegow17.SetfHplusgr(0.6);
     odegow17.SetfHeplusgr(0.6);
     odegow17.SetfCplusgr(0.6);

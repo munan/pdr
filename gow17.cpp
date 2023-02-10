@@ -284,7 +284,6 @@ gow17::gow17()
    GPE_(NULL),
    GISRF_(NULL),
    Gph_(NULL),
-   fH2gr_(1.),
    fHplusgr_(1.),
    fCplusgr_(1.),
    fSplusgr_(1.),
@@ -1067,10 +1066,6 @@ void gow17::SetRadField(double *GPE, double *Gph, double *GISRF){
   GPE_ = GPE;
   GISRF_ = GISRF;
   Gph_ = Gph;
-  return;
-}
-void gow17::SetfH2gr(double fH2gr) {
-  fH2gr_ = fH2gr;
   return;
 }
 
