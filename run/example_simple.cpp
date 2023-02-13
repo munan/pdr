@@ -35,7 +35,7 @@ int main() {
   const bool isfsC = true;
   //dust and gas metallicity
   const double Zdg = 1.;
-  //minimum column of the PDR
+  //minimum column of the PDR, only used for log spaced grid
   const double NH_min = 1.0e17/Zdg;
   //maximum column of the PDR
   const double NH_total = 1.0e22/Zdg;
