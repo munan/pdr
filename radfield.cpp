@@ -34,11 +34,11 @@ RadField::~RadField() {
   delete [] Gph;
 }
 
-void RadField::Beamed(const long int igrid, const double NH, 
+void RadField::Beamed(const long int igrid, const double NH,
                       const double NH2, const double NCO, const double NC) {
   double AV;
   if (isdust_) {
-    AV = NH * Zd_ / 1.87e21; 
+    AV = NH * Zd_ / 1.87e21;
     GPE[igrid] = (G0_/2.) * exp(-NH * Thermo::sigmaPE_ * Zd_);
     GISRF[igrid] = (G0_/2.) * exp(-NH * Thermo::sigmaISRF_ * Zd_);
   } else {
@@ -58,7 +58,7 @@ void RadField::Beamed(const long int igrid, const double NH,
     fs_CO_ = Shielding::fShield_CO_V09(NCO, NH2);
     Gph[igrid][gow17::iph_CO_] *= fs_CO_;
   }
-  /*self-shielding of CI, CI shielding of CO*/
+  /*self-shielding of CI*/
   if (isfsC_) {
     fs_C_ = Shielding::fShield_C(NC, NH2);
     Gph[igrid][gow17::iph_C_] *= fs_C_;
@@ -80,13 +80,13 @@ void RadField::Beamed(const long int igrid, const double NH,
   return;
 }
 
-void RadField::IsotropicApprox(const long int igrid, const double NH, 
+void RadField::IsotropicApprox(const long int igrid, const double NH,
                          const double NH2, const double NCO, const double NC) {
   Beamed(igrid, NH*2, NH2*2, NCO*2, NC*2);
   return;
 }
 
-void RadField::Isotropic(const long int igrid, const double NH, 
+void RadField::Isotropic(const long int igrid, const double NH,
                          const double NH2, const double NCO, const double NC,
                          const long int nangle) {
   double sumGPE = 0.;
@@ -117,7 +117,7 @@ void RadField::Isotropic(const long int igrid, const double NH,
   double x;
   for (long int i=1; i<nangle; i++){
     x = dx * i;
-    dist_fac = 1. / x; 
+    dist_fac = 1. / x;
     Beamed(igrid, NH*dist_fac, NH2*dist_fac, NCO*dist_fac, NC*dist_fac);
     sumGPE += 2*GPE[igrid];
     sumGISRF += 2*GISRF[igrid];

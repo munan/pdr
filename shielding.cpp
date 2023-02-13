@@ -76,7 +76,7 @@ double Shielding::fShield_CO_vDB(const double NCO, const double NH2) {
 	int iCO0, iCO1;
 	int iH20, iH21;
 	/*interpretation value of first, second line, and final value*/
-	double fl1, fl2, fl; 
+	double fl1, fl2, fl;
 	/*find which two points are we interpolate/extroplating*/
 	iCO0 = LinearInterpIndex(len_NCO_DB_, logNCOvDB_, logNCO);
 	iCO1 = iCO0+1;
@@ -95,15 +95,27 @@ double Shielding::fShield_CO_vDB(const double NCO, const double NH2) {
 
 double Shielding::fShield_CO_V09(const double NCO, const double NH2) {
   const double N_small_ = 1.0e10;
-  if (NCO < N_small_ and NH2 < N_small_) {
+  double logNCO, logNH2;
+  //restrain values on the table
+  if (NCO < N_small_ && NH2 < N_small_) {
     return 1.0;
   }
-	const double logNCO = log10(NCO);
-	const double logNH2 = log10(NH2);
+  if (NCO < N_small_) {
+    logNCO = 10.;
+    logNH2 = log10(NH2);
+  } else if (NH2 < N_small_) {
+    logNH2 = 10.;
+    logNCO = log10(NCO);
+  } else {
+    logNCO = log10(NCO);
+    logNH2 = log10(NH2);
+  }
+
+
 	int iCO0, iCO1;
 	int iH20, iH21;
 	/*interpretation value of first, second line, and final value*/
-	double fl1, fl2, fl; 
+	double fl1, fl2, fl;
 	/*find which two points are we interpolate/extroplating*/
 	iCO0 = LinearInterpIndex(len_NCO_V09_, logNCOV09_, logNCO);
 	iCO1 = iCO0+1;
@@ -121,6 +133,10 @@ double Shielding::fShield_CO_V09(const double NCO, const double NH2) {
 }
 
 double Shielding::fShield_H2(const double NH2, const double bH2) {
+  const double N_small_ = 10.;
+  if (NH2 < N_small_) {
+    return 1.;
+  }
   const double b5 = bH2 / 1.0e5;
   const double x = NH2 / 5.0e14;
   double p1, p2, term; /*first and second term*/

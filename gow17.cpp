@@ -25,7 +25,7 @@ gow17::SpecMap gow17::InitMap_() {
 const double gow17::xHe_ = 0.1;
 const double gow17::xC_std_ = 1.6e-4;
 const double gow17::xO_std_ = 3.2e-4;
-const double gow17::xS_std_ = 3.5e-6;
+const double gow17::xS_std_ = 0.;//3.5e-6;
 const double gow17::xSi_std_ = 1.7e-6;
 const double gow17::temp_coll_ = 7.0e2;
 const double gow17::mH_ = 1.67e-24;
@@ -113,7 +113,7 @@ const double gow17::kcr_base_[n_cr_] =
  (32) O+ + H2 -> OH + *H     -- branching of H2O+
  (33) O+ + H2 -> *O + *H + *H  -- branching of H2O+
  --- CH+ from hot gas --
- (34) C+ + H2 -> CHx + *H
+ (34) C+ + H2 -> CHx + *H -- not included
  */
 const int gow17::i2body_H2_H = 15;
 const int gow17::i2body_H2_H2 = 16;
@@ -173,7 +173,7 @@ const double gow17::k2body_base_[n_2body_] =
 								 8.46e-7, 7.20e-15,
                  2.81e-11, 3.5e-11, 3.3e-13 * 0.3, 1.6e-10, 5e-11,
                  1.46e-10, 2.1e-9, 1.99e-9, 1.00, 6.4e-10,
-                 1.00, 1.00, 1.6e-9, 1.6e-9, 3.8e-14};
+                 1.00, 1.00, 1.6e-9, 1.6e-9, 0.0};
 //rates for H3+ + C forming CH+ and CH2+
 const double gow17::A_kCHx_ = 1.04e-9;
 const double gow17::n_kCHx_ = 2.31e-3;
