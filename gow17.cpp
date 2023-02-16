@@ -308,12 +308,10 @@ gow17::gow17()
 	NCO_ = 0.;
 	NH_ = 0.;
   isNCOeff_global_ = false;
-  is_dvdr_ = false;
   isbCO_L_ = false;
   isCoolingCOThin_ = false;
-	dx_cell_ = 0;
+	Leff_CO_max_ = 3.0e20; //Maximum CO cooling length. default 100pc.
   gradv_ = 1.0e-14; /*0.3km/s /pc*/
-  gradnH_ = 3.0e-17; /* 100 cm^-3 / pc */
 }
 
 gow17::~gow17() {
@@ -733,11 +731,8 @@ void gow17::SetNH(const double NH) {
 	return;
 }
 
-void gow17::SetdxCell(const double dx_cell) {
-	if (dx_cell < 0) {
-		throw std::runtime_error("SetdxCell: dx_cell < 0\n");
-	}
-	dx_cell_ = dx_cell;
+void gow17::Leff_CO_max(const double Leff_CO_max) {
+	Leff_CO_max_ = Leff_CO_max;
 	return;
 }
 
@@ -748,7 +743,7 @@ void gow17::WriteParam(FILE *pf) const {
 	fprintf(pf, "xO = %0.4e\n", xO_);
 	fprintf(pf, "xHe = %0.4e\n", xHe_);
 	fprintf(pf, "NCO = %0.4e\n", NCO_);
-	fprintf(pf, "dx_cell = %0.4e\n", dx_cell_);
+	fprintf(pf, "Leff_CO_max = %0.4e\n", Leff_CO_max_);
 	return;
 }
 
@@ -916,29 +911,20 @@ double gow17::dEdt_(const double *y, const bool is_store_rates) {
   /* Calculate effective CO column density*/
   const double vth = sqrt(2. * Thermo::kb_ * T / mCO_);
   const double nCO = nH_ * y[iCO_];
-  double NCOeff, Leff_n, Leff_v, Leff;
+  double NCOeff, grad_small, gradeff;
   if (isCoolingCOThin_) {
     NCOeff = 0;
   } else if (isNCOeff_global_) {
-    const double NCO = NCO_ + y[iCO_]*nH_*dx_cell_;
     if (isbCO_L_) {
       double bCO_L = 1.0e5 * sqrt(NH_/nH_ / 3.086e18);
-      NCOeff = NCO / bCO_L;
+      NCOeff = NCO_ / bCO_L;
     } else {
-      NCOeff = NCO / bCO_;
+      NCOeff = NCO_ / bCO_;
     }
-  } else if (is_dvdr_) {
-    NCOeff = nCO / gradv_;
   } else {
-    /*TODO: dx_cell_ can't be too small*/
-    if (gradv_ > vth / dx_cell_) {
-      NCOeff = nCO / gradv_;
-    } else {
-      Leff_n = nH_ / gradnH_;
-      Leff_v = vth / gradv_;
-      Leff = std::min(Leff_n, Leff_v);
-      NCOeff = nCO * Leff / vth;
-    }
+    grad_small = vth / Leff_CO_max_;
+    gradeff = std::max(gradv_, grad_small);
+    NCOeff = nCO / gradeff;
   }
   const double GCOR = Thermo::CoolingCOR(y[iCO_], nH_*y[iH_],  nH_*y[iH2_],
                                          nH_*y[ie_],  T,  NCOeff);
@@ -1005,11 +991,6 @@ void gow17::SetGradv(const double gradv) {
 
 void gow17::SetNCOeffGlobal(const bool isNCOeff_global) {
   isNCOeff_global_ = isNCOeff_global;
-  return;
-}
-
-void gow17::Setdvdr(const bool is_dvdr) {
-  is_dvdr_ = is_dvdr;
   return;
 }
 

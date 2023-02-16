@@ -75,11 +75,10 @@ class gow17 : public Ode {
 		void SetGradv(const double gradv);
     /*Set to use global NCO for NCOeff or not*/
     void SetNCOeffGlobal(const bool isNCOeff_global);
-    void Setdvdr(const bool is_dvdr);
     void SetCoolingCOThin(const bool isCoolingCOThin);
     /*Set to bCO as a function of length scale or not*/
     void SetbCOL(const bool isbCO_L);
-		void SetdxCell(const double dx_cell);
+		void Leff_CO_max(const double Leff_CO_max);
 		/*output physical parameters to file*/
 		void WriteParam(FILE *pf) const;
 		/*output rates of reactions to file*/
@@ -150,19 +149,16 @@ class gow17 : public Ode {
 		/*column denstiy of CO, in cm^-2*/
 		double NCO_;
 		double NH_;
-		/*dx_cell_: when not equal to zero, take into the column density of
-		 * dx_cell_/2 * nH * xCO(xH2) into account when calculating
-		 * self-sheilding*/
-		double dx_cell_;
     /*Veolcity dispersion of CO for calculating NCOeff if using global NCO*/
 		double bCO_;
     /*Set to use global value for NCOeff or not*/
     bool isNCOeff_global_;
-    bool is_dvdr_;
     /*Set to use bCO as a function of length scale or not.*/
     bool isbCO_L_;
     /*Set whether to use optically thin CO cooling (NCOeff = 0) */
     bool isCoolingCOThin_;
+    //Maximum CO cooling length. default 100pc.
+    double Leff_CO_max_;
 
 		/*----------------------Chemical reactions----------------------------*/
 		/*store index for useful species*/
@@ -287,8 +283,6 @@ class gow17 : public Ode {
     double temp_;
     /* absolute value of velocity gradiant */
     double gradv_;
-    /* absolute value of number density gradiant*/
-    double gradnH_;
     /* heating (L) and cooling (G) processes. Details see dEdt_() comments.*/
     static const int nE_ = 15; /*number of heating and cooling processes*/
     double LCR_;
