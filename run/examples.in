@@ -1,4 +1,4 @@
 #input cpp file,    output exe,   output dir (same as the last part of dir variable in the input cpp file)
 example_simple.cpp       example_simple       out_example_simple
 example_large.cpp        example_large        out_example_large
-athenapp_benchmark.cpp   athenapp_benchmark   out_athenapp_benchmark
+#athenapp_benchmark.cpp   athenapp_benchmark   out_athenapp_benchmark
