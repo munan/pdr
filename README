@@ -3,7 +3,7 @@ Wolifre (2017) (http://adsabs.harvard.edu/abs/2017ApJ...843...38G). Requires
 CVODE library.
 
 Steps to run the code:
-1. Install the Sundials CVODE library (version 4.1.0):
+1. Install the Sundials CVODE library (version 5.7.0):
 The CVODE package: https://computation.llnl.gov/projects/sundials/sundials-software
 The default options should be fine.
 
